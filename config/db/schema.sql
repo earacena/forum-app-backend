@@ -1,9 +1,3 @@
--- Create database
-CREATE DATABASE testdb;
-
--- Connect to created database
-\c testdb
-
 -- Setup schema
 CREATE TABLE users (
   id SERIAL PRIMARY KEY,
