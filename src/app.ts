@@ -1,7 +1,7 @@
 import express from 'express';
-import usersRouter from './routes/users';
-import postsRouter from './routes/posts';
-import threadsRouter from './routes/threads';
+import usersRouter from './api/user/user.routes';
+import postsRouter from './api/post/post.routes';
+import threadsRouter from './api/thread/thread.routes';
 
 const app = express();
 
