@@ -1,10 +1,9 @@
 
-import express, { Request, Response} from 'express';
+import express from 'express';
+import { getPostsController } from './post.controller';
 
 const postsRouter = express.Router();
 
-postsRouter.get('/', async (_req: Request, res: Response) => {
-  res.send('Getting all posts...');
-});
+postsRouter.get('/', getPostsController);
 
 export default postsRouter;
