@@ -1,10 +1,8 @@
-
-import express, { Request, Response} from 'express';
+import express from 'express';
+import { getThreadsController } from './thread.controllers';
 
 const threadsRouter = express.Router();
 
-threadsRouter.get('/', async (_req: Request, res: Response) => {
-  res.send('Getting all threads...');
-});
+threadsRouter.get('/', getThreadsController);
 
 export default threadsRouter;
