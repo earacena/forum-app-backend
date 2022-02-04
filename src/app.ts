@@ -1,4 +1,5 @@
 import express from 'express';
+import helmet from 'helmet';
 import usersRouter from './api/user/user.routes';
 import postsRouter from './api/post/post.routes';
 import threadsRouter from './api/thread/thread.routes';
@@ -7,7 +8,9 @@ import { connectToDatabase } from './utils/db';
 
 const app = express();
 
+// Pre-route middleware
 app.use(express.json());
+app.use(helmet());
 
 // Routes
 app.use('/api/users', usersRouter);
