@@ -1,9 +1,10 @@
 import express from 'express';
 import helmet from 'helmet';
+import morgan = require('morgan');
 import usersRouter from './api/user/user.routes';
 import postsRouter from './api/post/post.routes';
 import threadsRouter from './api/thread/thread.routes';
-import { PORT } from './config';
+import { NODE_ENV, PORT } from './config';
 import { connectToDatabase } from './utils/db';
 
 const app = express();
@@ -11,6 +12,9 @@ const app = express();
 // Pre-route middleware
 app.use(express.json());
 app.use(helmet());
+if (NODE_ENV === 'development') {
+  app.use(morgan('dev'));
+}
 
 // Routes
 app.use('/api/users', usersRouter);
