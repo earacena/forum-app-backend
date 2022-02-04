@@ -1,5 +1,11 @@
 import { Request, Response } from 'express';
+import Thread from './thread.model';
 
-export const getThreadsController = async (_req: Request, res: Response) => {
-  res.send('Getting all threads...');
+const getThreadsController = async (_req: Request, res: Response) => {
+  const threads = await Thread.findAll();
+  res.json(threads);
+};
+
+export default {
+  getThreadsController,
 };
