@@ -1,7 +1,7 @@
 -- Setup schema
 CREATE TABLE users (
   id SERIAL PRIMARY KEY,
-  username CHAR(50),
+  username VARCHAR(50),
   name TEXT,
   date_registered TIMESTAMPTZ NOT NULL DEFAULT CURRENT_TIMESTAMP,
   password_hash CHAR(60)
@@ -9,15 +9,15 @@ CREATE TABLE users (
 
 CREATE TABLE posts (
   id SERIAL PRIMARY KEY,
-  thread_id BIGINT NOT NULL,
-  user_id BIGINT NOT NULL,
+  thread_id INTEGER NOT NULL,
+  user_id INTEGER NOT NULL,
   content TEXT NOT NULL,
   date_posted TIMESTAMPTZ NOT NULL DEFAULT CURRENT_TIMESTAMP
 );
 
 CREATE TABLE threads (
   id SERIAL PRIMARY KEY,
-  user_id BIGINT NOT NULL,
+  user_id INTEGER NOT NULL,
   date_created TIMESTAMPTZ NOT NULL DEFAULT CURRENT_TIMESTAMP,
   title TEXT NOT NULL
 );
