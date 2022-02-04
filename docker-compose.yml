@@ -11,4 +11,4 @@ services:
       POSTGRES_PASSWORD: pgpass
       POSTGRES_DB: pgdb
     volumes:
-      - ./db/schema.sql:/docker-entrypoint-initdb.d/schema.sql
+      - ./src/config/postgres/schema.sql:/docker-entrypoint-initdb.d/schema.sql
