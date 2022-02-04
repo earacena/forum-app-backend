@@ -5,6 +5,7 @@ let options = {};
 if (NODE_ENV === 'production') {
   // Reccommended for production database to use SSL
   options = {
+    logging: false,
     dialectOptions: {
       ssl: {
         require: true,
