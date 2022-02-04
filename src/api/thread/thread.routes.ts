@@ -1,5 +1,9 @@
 import express from 'express';
-import { getThreadsController } from './thread.controllers';
+import threadControllers from './thread.controllers';
+
+const {
+  getThreadsController,
+} = threadControllers;
 
 const threadsRouter = express.Router();
 
