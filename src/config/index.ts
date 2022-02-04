@@ -27,6 +27,8 @@ export const NODE_ENV = validateEnvironmentVariable(process.env['NODE_ENV']);
 
 export const DATABASE_URL = determineDatabaseUrl(NODE_ENV);
 
-export const PORT = isValidNumber(
+export const PORT: number = isValidNumber(
   validateEnvironmentVariable(process.env['PORT']),
-);
+)
+  ? Number(process.env['PORT'])
+  : 3001;
