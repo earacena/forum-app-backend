@@ -4,7 +4,7 @@ import { sequelize } from '../../utils/db';
 
 const api = supertest(app.app);
 
-describe('Forum API', () => {
+describe('Post API', () => {
   describe('when retrieving Posts', () => {
     test('successfully retrieves all posts', async () => {
       const response = await api.get('/api/posts').expect(200);
