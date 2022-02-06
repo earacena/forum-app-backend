@@ -18,6 +18,8 @@ const determineDatabaseUrl = (nodeEnv: string): string => {
   switch (nodeEnv) {
     case 'development':
       return validateEnvironmentVariable(process.env['DEV_DATABASE_URL']);
+    case 'testing':
+      return validateEnvironmentVariable(process.env['TEST_DATABASE_URL']);
     default:
       return '';
   }
