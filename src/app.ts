@@ -28,4 +28,4 @@ const main = async () => {
   });
 };
 
-export default { main };
+export default { main, app };
