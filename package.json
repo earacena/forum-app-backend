@@ -2,6 +2,7 @@
   "name": "forum-app-backend",
   "version": "1.0.0",
   "description": "A backend for a forum web application powered by Express.js, Node.js, and Typescript.",
+  "private": true,
   "main": "src/index.ts",
   "scripts": {
     "test": "NODE_ENV=testing jest --verbose --runInBand",
