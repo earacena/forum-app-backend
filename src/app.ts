@@ -1,5 +1,6 @@
 import express from 'express';
 import helmet from 'helmet';
+import cors = require('cors');
 import morgan = require('morgan');
 import usersRouter from './api/user/user.routes';
 import postsRouter from './api/post/post.routes';
@@ -10,6 +11,7 @@ import { connectToDatabase } from './utils/db';
 const app = express();
 
 // Pre-route middleware
+app.use(cors());
 app.use(express.json());
 app.use(helmet());
 if (NODE_ENV === 'development') {
