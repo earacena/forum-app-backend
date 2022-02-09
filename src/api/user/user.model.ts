@@ -15,10 +15,10 @@ User.init({
   name: {
     type: DataTypes.TEXT,
   },
-  date_registered: {
+  dateRegistered: {
     type: DataTypes.DATE,
   },
-  password_hash: {
+  passwordHash: {
     type: DataTypes.CHAR(60),
   },
 }, {

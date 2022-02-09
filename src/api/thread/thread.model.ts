@@ -8,11 +8,11 @@ Thread.init({
     primaryKey: true,
     autoIncrement: true,
   },
-  user_id: {
+  userId: {
     type: DataTypes.INTEGER,
     allowNull: false,
   },
-  date_created: {
+  dateCreated: {
     type: DataTypes.DATE,
     allowNull: false,
   },

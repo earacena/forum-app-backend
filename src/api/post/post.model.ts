@@ -9,11 +9,11 @@ Post.init(
       primaryKey: true,
       autoIncrement: true,
     },
-    thread_id: {
+    threadId: {
       type: DataTypes.INTEGER,
       allowNull: false,
     },
-    user_id: {
+    userId: {
       type: DataTypes.INTEGER,
       allowNull: false,
     },
@@ -21,7 +21,7 @@ Post.init(
       type: DataTypes.TEXT,
       allowNull: false,
     },
-    date_posted: {
+    datePosted: {
       type: DataTypes.DATE,
       allowNull: false,
     },
