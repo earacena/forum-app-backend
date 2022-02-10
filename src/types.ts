@@ -30,7 +30,7 @@ export const ThreadArray = RtArray(Thread);
 export type Posts = RtStatic<typeof PostArray>;
 export type Threads = RtStatic<typeof ThreadArray>;
 
-export const PostRequest = RtRecord({
+export const PostPostRequest = RtRecord({
   userId: RtNumber,
   threadId: RtNumber,
   content: RtString,
@@ -40,12 +40,12 @@ export const PostUpdateRequest = RtRecord({
   content: RtString,
 });
 
-export const ThreadRequest = RtRecord({
+export const ThreadPostRequest = RtRecord({
   userId: RtNumber,
   title: RtString,
 });
 
-export const UserRequest = RtRecord({
+export const UserPostRequest = RtRecord({
   name: RtString,
   username: RtString,
 });
