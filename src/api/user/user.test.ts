@@ -13,17 +13,21 @@ describe('User API', () => {
         username: 'user1',
         name: 'User One',
       });
+      await User.create({
+        username: 'user2',
+        name: 'User Two',
+      });
     });
 
     test('successfully retrieves all users', async () => {
       const response = await api.get('/api/users').expect(200);
-      expect(JSON.parse(response.text)).toHaveLength(1);
+      expect(JSON.parse(response.text)).toHaveLength(2);
     });
 
     test('successfully a user by id', async () => {
-      const response = await api.get('/api/users/1').expect(200);
+      const response = await api.get('/api/users/2').expect(200);
       expect(JSON.parse(response.text)).toBeDefined();
-      expect(JSON.parse(response.text).username).toBe('user1');
+      expect(JSON.parse(response.text).username).toBe('user2');
     });
   });
 
