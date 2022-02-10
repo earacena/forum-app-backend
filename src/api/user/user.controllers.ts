@@ -1,5 +1,6 @@
 import { Request, Response } from 'express';
-import { UserPostRequest } from '../../types';
+import bcrypt from 'bcrypt';
+import { UserPostRequest } from './user.types';
 import User from './user.model';
 
 const getUsersController = async (_req: Request, res: Response) => {
@@ -8,11 +9,16 @@ const getUsersController = async (_req: Request, res: Response) => {
 };
 
 const createUserController = async (req: Request, res: Response) => {
-  const { name, username } = UserPostRequest.check(req.body);
+  const { name, username, password } = UserPostRequest.check(req.body);
+
+  const passwordHash = await bcrypt.hash(password, 10);
+
   const newUser = await User.create({
     name,
     username,
+    passwordHash,
   });
+
   res.status(201).json(newUser);
 };
 
