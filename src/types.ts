@@ -22,3 +22,9 @@ export const ThreadArray = RT.Array(Thread);
 
 export type Posts = RT.Static<typeof PostArray>;
 export type Threads = RT.Static<typeof ThreadArray>;
+
+export const PostRequest = RT.Record({
+  userId: RT.Number,
+  threadId: RT.Number,
+  content: RT.String,
+});
