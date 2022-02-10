@@ -2,6 +2,10 @@ import supertest from 'supertest';
 import app from '../../app';
 import { sequelize } from '../../utils/db';
 import Thread from './thread.model';
+import {
+  Thread as ThreadType,
+  ThreadArray as ThreadArrayType,
+} from './thread.types';
 
 const api = supertest(app.app);
 
@@ -25,13 +29,15 @@ describe('Thread API', () => {
 
     test('successfully retrieves all threads', async () => {
       const response = await api.get('/api/threads').expect(200);
-      expect(JSON.parse(response.text)).toHaveLength(3);
+      const threads = ThreadArrayType.check(JSON.parse(response.text));
+      expect(threads).toHaveLength(3);
     });
 
     test('successfully a thread by id', async () => {
       const response = await api.get('/api/threads/1').expect(200);
-      expect(JSON.parse(response.text)).toBeDefined();
-      expect(JSON.parse(response.text).title).toBe('Discussion topic #1');
+      const thread = ThreadType.check(JSON.parse(response.text));
+      expect(thread).toBeDefined();
+      expect(thread.title).toBe('Discussion topic #1');
     });
   });
 
@@ -54,18 +60,19 @@ describe('Thread API', () => {
 
     test('successfully deletes thread', async () => {
       const response = await api.get('/api/threads/').expect(200);
-      await api
-        .delete(`/api/threads/${JSON.parse(response.text)[0].id}`)
-        .expect(204);
+      const threads = ThreadArrayType.check(JSON.parse(response.text));
+      const thread = ThreadType.check(threads[0]);
+      await api.delete(`/api/threads/${thread.id}`).expect(204);
     });
 
     test('deletion is reflected in length of returned threads', async () => {
       let response = await api.get('/api/threads/').expect(200);
-      await api
-        .delete(`/api/threads/${JSON.parse(response.text)[0].id}`)
-        .expect(204);
+      let threads = ThreadArrayType.check(JSON.parse(response.text));
+      const thread = ThreadType.check(threads[0]);
+      await api.delete(`/api/threads/${thread.id}`).expect(204);
 
       response = await api.get('/api/threads').expect(200);
+      threads = ThreadArrayType.check(JSON.parse(response.text));
       expect(JSON.parse(response.text)).toHaveLength(2);
     });
   });
@@ -86,11 +93,10 @@ describe('Thread API', () => {
         .send(newThread)
         .expect(201);
 
-      expect(JSON.parse(response.text)).toBeDefined();
-      expect(JSON.parse(response.text).title).toBe(
-        'Interesting topic to discuss',
-      );
-      expect(JSON.parse(response.text).userId).toBe(1);
+      const thread = ThreadType.check(JSON.parse(response.text));
+      expect(thread).toBeDefined();
+      expect(thread.title).toBe('Interesting topic to discuss');
+      expect(thread.userId).toBe(1);
     });
   });
 
