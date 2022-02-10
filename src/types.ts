@@ -1,44 +1,51 @@
-import * as RT from 'runtypes';
+import {
+  Number as RtNumber,
+  String as RtString,
+  Array as RtArray,
+  Static as RtStatic,
+  Record as RtRecord,
+} from 'runtypes';
+
 import utils from './utils';
 
 const { isDateString } = utils;
 
-export const Post = RT.Record({
-  id: RT.Number,
-  threadId: RT.Number,
-  userId: RT.Number,
-  content: RT.String,
-  datePosted: RT.String.withConstraint(isDateString),
+export const Post = RtRecord({
+  id: RtNumber,
+  threadId: RtNumber,
+  userId: RtNumber,
+  content: RtString,
+  datePosted: RtString.withConstraint(isDateString),
 });
-export const PostArray = RT.Array(Post);
+export const PostArray = RtArray(Post);
 
-export const Thread = RT.Record({
-  id: RT.Number,
-  userId: RT.Number,
-  dateCreated: RT.String.withConstraint(isDateString),
-  title: RT.String,
+export const Thread = RtRecord({
+  id: RtNumber,
+  userId: RtNumber,
+  dateCreated: RtString.withConstraint(isDateString),
+  title: RtString,
 });
-export const ThreadArray = RT.Array(Thread);
+export const ThreadArray = RtArray(Thread);
 
-export type Posts = RT.Static<typeof PostArray>;
-export type Threads = RT.Static<typeof ThreadArray>;
+export type Posts = RtStatic<typeof PostArray>;
+export type Threads = RtStatic<typeof ThreadArray>;
 
-export const PostRequest = RT.Record({
-  userId: RT.Number,
-  threadId: RT.Number,
-  content: RT.String,
-});
-
-export const PostUpdateRequest = RT.Record({
-  content: RT.String,
+export const PostRequest = RtRecord({
+  userId: RtNumber,
+  threadId: RtNumber,
+  content: RtString,
 });
 
-export const ThreadRequest = RT.Record({
-  userId: RT.Number,
-  title: RT.String,
+export const PostUpdateRequest = RtRecord({
+  content: RtString,
 });
 
-export const UserRequest = RT.Record({
-  name: RT.String,
-  username: RT.String,
+export const ThreadRequest = RtRecord({
+  userId: RtNumber,
+  title: RtString,
+});
+
+export const UserRequest = RtRecord({
+  name: RtString,
+  username: RtString,
 });
