@@ -1,4 +1,5 @@
 import { Request, Response } from 'express';
+import { PostRequest } from '../../types';
 import Post from './post.model';
 
 const getPostsController = async (_req: Request, res: Response) => {
@@ -15,7 +16,28 @@ const getPostByIdController = async (req: Request, res: Response) => {
   }
 };
 
+const deletePostByIdController = async (req: Request, res: Response) => {
+  await Post.destroy({
+    where: {
+      id: req.params['id'],
+    },
+  });
+  res.status(204).end();
+};
+
+const createPostController = async (req: Request, res: Response) => {
+  const { userId, threadId, content } = PostRequest.check(req.body);
+  const newPost = await Post.create({
+    userId,
+    threadId,
+    content,
+  });
+  res.status(201).json(newPost);
+};
+
 export default {
   getPostsController,
   getPostByIdController,
+  deletePostByIdController,
+  createPostController,
 };
