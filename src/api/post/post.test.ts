@@ -2,6 +2,7 @@ import supertest from 'supertest';
 import app from '../../app';
 import { sequelize } from '../../utils/db';
 import Post from './post.model';
+import { Post as PostType, PostArray as PostArrayType } from './post.types';
 
 const api = supertest(app.app);
 
@@ -28,15 +29,15 @@ describe('Post API', () => {
 
     test('successfully retrieves all posts', async () => {
       const response = await api.get('/api/posts').expect(200);
-      expect(JSON.parse(response.text)).toHaveLength(3);
+      const posts = PostArrayType.check(JSON.parse(response.text));
+      expect(posts).toHaveLength(3);
     });
 
     test('successfully a post by id', async () => {
       const response = await api.get('/api/posts/2').expect(200);
-      expect(JSON.parse(response.text)).toBeDefined();
-      expect(JSON.parse(response.text).content).toBe(
-        'Very interesting discussion.',
-      );
+      const post = PostType.check(JSON.parse(response.text));
+      expect(post).toBeDefined();
+      expect(post.content).toBe('Very interesting discussion.');
     });
   });
 
@@ -62,19 +63,20 @@ describe('Post API', () => {
 
     test('successfully deletes post', async () => {
       const response = await api.get('/api/posts/').expect(200);
-      await api
-        .delete(`/api/posts/${JSON.parse(response.text)[0].id}`)
-        .expect(204);
+      const posts = PostArrayType.check(JSON.parse(response.text));
+      const post = PostType.check(posts[0]);
+      await api.delete(`/api/posts/${post.id}`).expect(204);
     });
 
     test('deletion is reflected in length of returned posts', async () => {
       let response = await api.get('/api/posts/').expect(200);
-      await api
-        .delete(`/api/posts/${JSON.parse(response.text)[0].id}`)
-        .expect(204);
+      let posts = PostArrayType.check(JSON.parse(response.text));
+      const post = PostType.check(posts[0]);
+      await api.delete(`/api/posts/${post.id}`).expect(204);
 
       response = await api.get('/api/posts').expect(200);
-      expect(JSON.parse(response.text)).toHaveLength(2);
+      posts = PostArrayType.check(JSON.parse(response.text));
+      expect(posts).toHaveLength(2);
     });
   });
 
@@ -91,9 +93,9 @@ describe('Post API', () => {
       };
 
       const response = await api.post('/api/posts').send(newPost).expect(201);
-
-      expect(JSON.parse(response.text)).toBeDefined();
-      expect(JSON.parse(response.text).content).toBe('Interesting...');
+      const post = PostType.check(JSON.parse(response.text));
+      expect(post).toBeDefined();
+      expect(post.content).toBe('Interesting...');
     });
   });
 
@@ -127,11 +129,11 @@ describe('Post API', () => {
         .send(postToUpdate)
         .expect(200);
 
-      expect(JSON.parse(response.text).content).toBe(
-        'This is a very interesting discussion.',
-      );
+      let post = PostType.check(JSON.parse(response.text));
+      expect(post.content).toBe('This is a very interesting discussion.');
 
       response = await api.get('/api/posts/2').expect(200);
+      post = PostType.check(JSON.parse(response.text));
 
       expect(JSON.parse(response.text).content).toBe(
         'This is a very interesting discussion.',
