@@ -28,3 +28,8 @@ export const PostRequest = RT.Record({
   threadId: RT.Number,
   content: RT.String,
 });
+
+export const ThreadRequest = RT.Record({
+  userId: RT.Number,
+  title: RT.String,
+});
