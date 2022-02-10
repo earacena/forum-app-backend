@@ -9,7 +9,7 @@ User.init({
     autoIncrement: true,
   },
   username: {
-    type: DataTypes.STRING(50),
+    type: DataTypes.TEXT,
     allowNull: false,
   },
   name: {
@@ -20,7 +20,7 @@ User.init({
     defaultValue: Sequelize.literal('CURRENT_TIMESTAMP'),
   },
   passwordHash: {
-    type: DataTypes.CHAR(60),
+    type: DataTypes.TEXT,
   },
 }, {
   sequelize,
