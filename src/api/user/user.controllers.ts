@@ -1,5 +1,5 @@
 import { Request, Response } from 'express';
-import { UserRequest } from '../../types';
+import { UserPostRequest } from '../../types';
 import User from './user.model';
 
 const getUsersController = async (_req: Request, res: Response) => {
@@ -8,7 +8,7 @@ const getUsersController = async (_req: Request, res: Response) => {
 };
 
 const createUserController = async (req: Request, res: Response) => {
-  const { name, username } = UserRequest.check(req.body);
+  const { name, username } = UserPostRequest.check(req.body);
   const newUser = await User.create({
     name,
     username,

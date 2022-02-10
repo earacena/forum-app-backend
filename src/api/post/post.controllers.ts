@@ -1,5 +1,5 @@
 import { Request, Response } from 'express';
-import { PostRequest, PostUpdateRequest } from '../../types';
+import { PostPostRequest, PostUpdateRequest } from '../../types';
 import Post from './post.model';
 
 const getPostsController = async (_req: Request, res: Response) => {
@@ -26,7 +26,7 @@ const deletePostByIdController = async (req: Request, res: Response) => {
 };
 
 const createPostController = async (req: Request, res: Response) => {
-  const { userId, threadId, content } = PostRequest.check(req.body);
+  const { userId, threadId, content } = PostPostRequest.check(req.body);
   const newPost = await Post.create({
     userId,
     threadId,

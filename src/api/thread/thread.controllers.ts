@@ -1,5 +1,5 @@
 import { Request, Response } from 'express';
-import { ThreadRequest } from '../../types';
+import { ThreadPostRequest } from '../../types';
 import Thread from './thread.model';
 
 const getThreadsController = async (_req: Request, res: Response) => {
@@ -8,7 +8,7 @@ const getThreadsController = async (_req: Request, res: Response) => {
 };
 
 const createThreadController = async (req: Request, res: Response) => {
-  const { title, userId } = ThreadRequest.check(req.body);
+  const { title, userId } = ThreadPostRequest.check(req.body);
   const newThread = await Thread.create({
     title,
     userId,
