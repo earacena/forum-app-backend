@@ -1,5 +1,5 @@
 import { Request, Response } from 'express';
-import { PostRequest } from '../../types';
+import { PostRequest, PostUpdateRequest } from '../../types';
 import Post from './post.model';
 
 const getPostsController = async (_req: Request, res: Response) => {
@@ -35,9 +35,27 @@ const createPostController = async (req: Request, res: Response) => {
   res.status(201).json(newPost);
 };
 
+const updatePostByIdController = async (req: Request, res: Response) => {
+  const { content } = PostUpdateRequest.check(req.body);
+  await Post.update(
+    {
+      content,
+    },
+    {
+      where: {
+        id: req.params['id'],
+      },
+    },
+  );
+
+  const updatedPost = await Post.findByPk(req.params['id']);
+  res.status(200).json(updatedPost);
+};
+
 export default {
   getPostsController,
   getPostByIdController,
   deletePostByIdController,
   createPostController,
+  updatePostByIdController,
 };
