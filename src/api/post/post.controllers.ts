@@ -1,5 +1,5 @@
 import { Request, Response } from 'express';
-import { PostPostRequest, PostUpdateRequest } from '../../types';
+import { PostPostRequest, PostUpdateRequest } from './post.types';
 import Post from './post.model';
 
 const getPostsController = async (_req: Request, res: Response) => {
