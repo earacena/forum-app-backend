@@ -33,3 +33,8 @@ export const ThreadRequest = RT.Record({
   userId: RT.Number,
   title: RT.String,
 });
+
+export const UserRequest = RT.Record({
+  name: RT.String,
+  username: RT.String,
+});
