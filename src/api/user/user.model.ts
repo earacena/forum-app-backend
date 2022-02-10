@@ -1,4 +1,4 @@
-import { DataTypes, Model } from 'sequelize';
+import { DataTypes, Model, Sequelize } from 'sequelize';
 import { sequelize } from '../../utils/db';
 
 class User extends Model {}
@@ -17,6 +17,7 @@ User.init({
   },
   dateRegistered: {
     type: DataTypes.DATE,
+    defaultValue: Sequelize.literal('CURRENT_TIMESTAMP'),
   },
   passwordHash: {
     type: DataTypes.CHAR(60),
