@@ -7,15 +7,31 @@ const api = supertest(app.app);
 
 describe('Thread API', () => {
   describe('when retrieving threads', () => {
+    beforeEach(async () => {
+      await Thread.sync({ force: true });
+      await Thread.create({
+        userId: 1,
+        title: 'Discussion topic #1',
+      });
+      await Thread.create({
+        userId: 2,
+        title: 'Discussion topic #2',
+      });
+      await Thread.create({
+        userId: 3,
+        title: 'Discussion topic #3',
+      });
+    });
+
     test('successfully retrieves all threads', async () => {
       const response = await api.get('/api/threads').expect(200);
-      expect(JSON.parse(response.text)).toHaveLength(1);
+      expect(JSON.parse(response.text)).toHaveLength(3);
     });
 
     test('successfully a thread by id', async () => {
       const response = await api.get('/api/threads/1').expect(200);
       expect(JSON.parse(response.text)).toBeDefined();
-      expect(JSON.parse(response.text).title).toBe('This is my first thread!');
+      expect(JSON.parse(response.text).title).toBe('Discussion topic #1');
     });
   });
 
@@ -24,7 +40,7 @@ describe('Thread API', () => {
       await Thread.sync({ force: true });
       await Thread.create({
         userId: 1,
-        title: 'Dicussion topic #1',
+        title: 'Discussion topic #1',
       });
       await Thread.create({
         userId: 2,
@@ -71,7 +87,9 @@ describe('Thread API', () => {
         .expect(201);
 
       expect(JSON.parse(response.text)).toBeDefined();
-      expect(JSON.parse(response.text).title).toBe('Interesting topic to discuss');
+      expect(JSON.parse(response.text).title).toBe(
+        'Interesting topic to discuss',
+      );
       expect(JSON.parse(response.text).userId).toBe(1);
     });
   });
