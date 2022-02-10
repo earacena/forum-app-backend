@@ -1,5 +1,5 @@
 import { Request, Response } from 'express';
-import { ThreadPostRequest } from '../../types';
+import { ThreadPostRequest } from './thread.types';
 import Thread from './thread.model';
 
 const getThreadsController = async (_req: Request, res: Response) => {
