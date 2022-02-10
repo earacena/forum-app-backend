@@ -1,4 +1,4 @@
-import { DataTypes, Model } from 'sequelize';
+import { DataTypes, Model, Sequelize } from 'sequelize';
 import { sequelize } from '../../utils/db';
 
 class Post extends Model {}
@@ -8,6 +8,7 @@ Post.init(
       type: DataTypes.INTEGER,
       primaryKey: true,
       autoIncrement: true,
+      allowNull: false,
     },
     threadId: {
       type: DataTypes.INTEGER,
@@ -23,7 +24,7 @@ Post.init(
     },
     datePosted: {
       type: DataTypes.DATE,
-      allowNull: false,
+      defaultValue: Sequelize.literal('CURRENT_TIMESTAMP'),
     },
   },
   {
