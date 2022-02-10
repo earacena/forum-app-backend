@@ -25,8 +25,19 @@ const getUserByIdController = async (req: Request, res: Response) => {
   }
 };
 
+const deleteUserByIdController = async (req: Request, res: Response) => {
+  await User.destroy({
+    where: {
+      id: req.params['id'],
+    },
+  });
+
+  res.status(204).end();
+};
+
 export default {
   getUsersController,
   getUserByIdController,
   createUserController,
+  deleteUserByIdController,
 };
