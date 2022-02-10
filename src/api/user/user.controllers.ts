@@ -1,9 +1,19 @@
 import { Request, Response } from 'express';
+import { UserRequest } from '../../types';
 import User from './user.model';
 
 const getUsersController = async (_req: Request, res: Response) => {
   const users = await User.findAll();
   res.json(users);
+};
+
+const createUserController = async (req: Request, res: Response) => {
+  const { name, username } = UserRequest.check(req.body);
+  const newUser = await User.create({
+    name,
+    username,
+  });
+  res.status(201).json(newUser);
 };
 
 const getUserByIdController = async (req: Request, res: Response) => {
@@ -18,4 +28,5 @@ const getUserByIdController = async (req: Request, res: Response) => {
 export default {
   getUsersController,
   getUserByIdController,
+  createUserController,
 };
