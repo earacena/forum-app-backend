@@ -7,6 +7,7 @@ import postsRouter from './api/post/post.routes';
 import threadsRouter from './api/thread/thread.routes';
 import { NODE_ENV, PORT } from './config';
 import { connectToDatabase } from './utils/db';
+import loginRouter from './api/login/login.routes';
 
 const app = express();
 
@@ -22,6 +23,7 @@ if (NODE_ENV === 'development') {
 app.use('/api/users', usersRouter);
 app.use('/api/posts', postsRouter);
 app.use('/api/threads', threadsRouter);
+app.use('/api/login', loginRouter);
 
 const main = async () => {
   await connectToDatabase();
