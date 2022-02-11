@@ -1,5 +1,5 @@
 import 'dotenv/config';
-import { String as RtString, Number as RtNumber } from 'runtypes'
+import { String as RtString } from 'runtypes';
 
 const determineDatabaseUrl = (nodeEnv: string): string => {
   switch (nodeEnv) {
@@ -14,5 +14,5 @@ const determineDatabaseUrl = (nodeEnv: string): string => {
 
 export const NODE_ENV = RtString.check(process.env['NODE_ENV']);
 export const DATABASE_URL = determineDatabaseUrl(NODE_ENV);
-
-export const PORT: number = RtNumber.check(process.env['PORT']);
+export const PORT = Number(RtString.check(process.env['PORT']));
+export const SECRET_JWT_KEY = RtString.check(process.env['SECRET_JWT_KEY']);
