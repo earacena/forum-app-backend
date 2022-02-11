@@ -4,6 +4,7 @@ import {
   Record as RtRecord,
   Static as RtStatic,
   Array as RtArray,
+  InstanceOf as RtInstanceOf,
 } from 'runtypes';
 
 export const User = RtRecord({
@@ -11,14 +12,7 @@ export const User = RtRecord({
   name: RtString,
   username: RtString,
   passwordHash: RtString,
-  dateRegistered: RtString.withConstraint((x: string) => {
-    // Must be parsable to a Date object if needed
-    if (!x || x === null || typeof x !== 'string' || Number.isNaN(Date.parse(x))) {
-      return false;
-    }
-
-    return true;
-  }),
+  dateRegistered: RtInstanceOf(Date),
 });
 
 export const UserPostRequest = RtRecord({
