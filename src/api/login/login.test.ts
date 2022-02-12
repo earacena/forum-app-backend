@@ -18,7 +18,7 @@ describe('Login API', () => {
         username: 'user1',
         name: 'User One',
         passwordHash: PasswordHashType.check(
-          await bcrypt.hash('password1', 10)
+          await bcrypt.hash('password1', 10),
         ),
       });
     });
