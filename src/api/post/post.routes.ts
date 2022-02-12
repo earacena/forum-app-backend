@@ -1,5 +1,6 @@
 import express from 'express';
 import postControllers from './post.controllers';
+import mw from './post.middleware';
 
 const {
   getPostsController,
@@ -12,9 +13,9 @@ const {
 const postsRouter = express.Router();
 
 postsRouter.get('/', getPostsController);
-postsRouter.post('/', createPostController);
+postsRouter.post('/', mw.authenticate, createPostController);
 postsRouter.get('/:id', getPostByIdController);
-postsRouter.delete('/:id', deletePostByIdController);
-postsRouter.put('/:id', updatePostByIdController);
+postsRouter.delete('/:id', mw.authenticate, deletePostByIdController);
+postsRouter.put('/:id', mw.authenticate, updatePostByIdController);
 
 export default postsRouter;
