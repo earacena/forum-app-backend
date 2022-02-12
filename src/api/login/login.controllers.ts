@@ -3,9 +3,10 @@ import bcrypt from 'bcrypt';
 import { String as RtString } from 'runtypes';
 import { Response, Request } from 'express';
 import User from '../user/user.model';
-import LoginRequest from './login.types';
+import { LoginRequest } from './login.types';
 import { User as UserType } from '../user/user.types';
 import { SECRET_JWT_KEY } from '../../config';
+import { RtValidationError } from '../post/post.types';
 
 const loginController = async (req: Request, res: Response) => {
   try {
@@ -39,8 +40,16 @@ const loginController = async (req: Request, res: Response) => {
         username: user.username,
         name: user.name,
       });
-  } catch (error) {
-    console.error(error);
+  } catch (error: unknown) {
+    if (RtValidationError.guard(error)) {
+      if (error.code === 'CONTENT_INCORRECT' && error.details) {
+        if ('decodedToken' in error.details) {
+          res.status(401).json({ error: 'invalid or missing token' }).end();
+        }
+
+        res.status(400).json({ error: error.details }).end();
+      }
+    }
   }
 };
 
