@@ -1,8 +1,22 @@
-import { String as RtString, Record as RtRecord } from 'runtypes';
+import {
+  String as RtString,
+  Record as RtRecord,
+  Number as RtNumber,
+} from 'runtypes';
 
-const LoginRequest = RtRecord({
+export const LoginRequest = RtRecord({
   username: RtString,
   password: RtString,
 });
 
-export default LoginRequest;
+export const decodedToken = RtRecord({
+  id: RtNumber,
+  username: RtString,
+});
+
+export const PasswordHash = RtString;
+export const TokenResponse = RtRecord({
+  token: RtString,
+  username: RtString,
+  name: RtString,
+});
