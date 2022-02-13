@@ -7,6 +7,7 @@ import {
   InstanceOf as RtInstanceOf,
   Union as RtUnion,
   ValidationError,
+  Optional as RtOptional,
 } from 'runtypes';
 
 export const Thread = RtRecord({
@@ -30,9 +31,32 @@ export const ThreadArray = RtArray(Thread);
 
 export type Threads = RtStatic<typeof ThreadArray>;
 
+export const decodedToken = RtRecord({
+  username: RtString,
+  id: RtNumber,
+});
+
 export const ThreadPostRequest = RtRecord({
-  userId: RtNumber,
   title: RtString,
+  decodedToken: RtOptional(
+    RtRecord({
+      id: RtNumber,
+      username: RtString,
+    }),
+  ),
+});
+
+export const ThreadDeleteRequest = RtRecord({
+  decodedToken: RtOptional(
+    RtRecord({
+      id: RtNumber,
+      username: RtString,
+    }),
+  ),
+});
+
+export const RequestIdParam = RtRecord({
+  id: RtString,
 });
 
 export const RtValidationError = RtInstanceOf(ValidationError);
