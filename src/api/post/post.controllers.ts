@@ -36,7 +36,7 @@ const deletePostByIdController = async (req: Request, res: Response, _next: Next
     const user = UserType.check(await User.findByPk(token.id));
     const post = PostType.check(await Post.findByPk(id));
 
-    console.log(`token: ${token}, postId: ${id}, user: ${user}, post: ${post}`);
+    // console.log(`token: ${token}, postId: ${id}, user: ${user}, post: ${post}`);
 
     if (user.id !== post.userId) {
       res
@@ -52,7 +52,7 @@ const deletePostByIdController = async (req: Request, res: Response, _next: Next
     });
     res.status(204).end();
   } catch (error: unknown) {
-    console.error(error);
+    // console.error(error);
     if (RtValidationError.guard(error)) {
       if (error.code === 'CONTENT_INCORRECT' && error.details) {
         if ('decodedToken' in error.details) {
