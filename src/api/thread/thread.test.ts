@@ -1,10 +1,12 @@
 import supertest from 'supertest';
 import app from '../../app';
 import { sequelize } from '../../utils/db';
+import { TokenResponse } from '../login/login.types';
 import Thread from './thread.model';
 import {
   Thread as ThreadType,
   ThreadArray as ThreadArrayType,
+  RtValidationError,
 } from './thread.types';
 
 const api = supertest(app.app);
@@ -28,9 +30,20 @@ describe('Thread API', () => {
     });
 
     test('successfully retrieves all threads', async () => {
-      const response = await api.get('/api/threads').expect(200);
-      const threads = ThreadArrayType.check(JSON.parse(response.text));
-      expect(threads).toHaveLength(3);
+      try {
+        const response = await api.get('/api/threads').expect(200);
+        console.log(JSON.parse(response.text));
+        const threads = ThreadArrayType.check(JSON.parse(response.text));
+        expect(threads).toHaveLength(3);
+      } catch (error: unknown) {
+        if (RtValidationError.guard(error)) {
+          if (error.code === 'CONTENT_INCORRECT') {
+            console.error(error.details);
+          } else {
+            console.error(error.code);
+          }
+        }
+      }
     });
 
     test('successfully a thread by id', async () => {
@@ -59,17 +72,39 @@ describe('Thread API', () => {
     });
 
     test('successfully deletes thread', async () => {
-      const response = await api.get('/api/threads/').expect(200);
+      let response = await api.get('/api/threads/').expect(200);
       const threads = ThreadArrayType.check(JSON.parse(response.text));
       const thread = ThreadType.check(threads[0]);
-      await api.delete(`/api/threads/${thread.id}`).expect(204);
+
+      response = await api
+        .post('/api/login')
+        .send({ username: 'testuser', password: 'testpassword' })
+        .expect(200);
+
+      const { token } = TokenResponse.check(JSON.parse(response.text));
+
+      await api
+        .delete(`/api/threads/${thread.id}`)
+        .set('Authorization', `bearer ${token}`)
+        .expect(204);
     });
 
     test('deletion is reflected in length of returned threads', async () => {
       let response = await api.get('/api/threads/').expect(200);
       let threads = ThreadArrayType.check(JSON.parse(response.text));
       const thread = ThreadType.check(threads[0]);
-      await api.delete(`/api/threads/${thread.id}`).expect(204);
+
+      response = await api
+        .post('/api/login')
+        .send({ username: 'testuser', password: 'testpassword' })
+        .expect(200);
+
+      const { token } = TokenResponse.check(JSON.parse(response.text));
+
+      await api
+        .delete(`/api/threads/${thread.id}`)
+        .set('Authorization', `bearer ${token}`)
+        .expect(204);
 
       response = await api.get('/api/threads').expect(200);
       threads = ThreadArrayType.check(JSON.parse(response.text));
@@ -88,9 +123,17 @@ describe('Thread API', () => {
         title: 'Interesting topic to discuss',
       };
 
-      const response = await api
+      let response = await api
+        .post('/api/login')
+        .send({ username: 'testuser', password: 'testpassword' })
+        .expect(200);
+
+      const { token } = TokenResponse.check(JSON.parse(response.text));
+
+      response = await api
         .post('/api/threads')
         .send(newThread)
+        .set('Authorization', `bearer ${token}`)
         .expect(201);
 
       const thread = ThreadType.check(JSON.parse(response.text));
