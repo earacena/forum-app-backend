@@ -1,5 +1,6 @@
 import express from 'express';
 import threadControllers from './thread.controllers';
+import auth from '../../middleware/authenticate';
 
 const {
   getThreadsController,
@@ -11,8 +12,8 @@ const {
 const threadsRouter = express.Router();
 
 threadsRouter.get('/', getThreadsController);
-threadsRouter.post('/', createThreadController);
+threadsRouter.post('/', auth, createThreadController);
 threadsRouter.get('/:id', getThreadByIdController);
-threadsRouter.delete('/:id', deleteThreadByIdController);
+threadsRouter.delete('/:id', auth, deleteThreadByIdController);
 
 export default threadsRouter;
