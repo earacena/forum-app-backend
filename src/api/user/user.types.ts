@@ -6,6 +6,7 @@ import {
   Array as RtArray,
   Union as RtUnion,
   InstanceOf as RtInstanceOf,
+  ValidationError,
 } from 'runtypes';
 
 export const User = RtRecord({
@@ -33,3 +34,4 @@ export const UserPostRequest = RtRecord({
 
 export const UserArray = RtArray(User);
 export type Users = RtStatic<typeof UserArray>;
+export const RtValidationError = RtInstanceOf(ValidationError);
