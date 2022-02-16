@@ -11,19 +11,19 @@ import { RtValidationError } from '../post/post.types';
 const loginController = async (req: Request, res: Response) => {
   try {
     const credentials = LoginRequest.check(req.body);
-    const user = UserType.check(await User.findOne({ where: { username: credentials.username } }));
+    const user = UserType.check(
+      await User.findOne({ where: { username: credentials.username } }),
+    );
 
-    const isPasswordCorrect = (user === null)
+    const isPasswordCorrect = user === null
       ? false
       : await bcrypt.compare(credentials.password, user.passwordHash);
 
-    if (!(user && isPasswordCorrect)) {
-      res
-        .status(401)
-        .json({
-          error: 'invalid username or password',
-        })
-        .end();
+    if (!isPasswordCorrect) {
+      res.status(401).json({
+        error: 'invalid credentials',
+      });
+      return;
     }
 
     const userDetails = {
@@ -39,7 +39,8 @@ const loginController = async (req: Request, res: Response) => {
         token,
         username: user.username,
         name: user.name,
-      });
+      })
+      .end();
   } catch (error: unknown) {
     if (RtValidationError.guard(error)) {
       if (error.code === 'CONTENT_INCORRECT' && error.details) {
@@ -47,8 +48,11 @@ const loginController = async (req: Request, res: Response) => {
           res.status(401).json({ error: 'invalid or missing token' }).end();
         }
 
-        res.status(400).json({ error: error.details }).end();
+        res.status(400).json({ error: error.details });
       }
+    } else {
+      // console.error(error);
+      res.status(401).json({ error: 'invalid credentials' });
     }
   }
 };
