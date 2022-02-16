@@ -2,6 +2,7 @@ import { Sequelize } from 'sequelize';
 import { NODE_ENV, DATABASE_URL } from '../config';
 
 let options = {};
+
 if (NODE_ENV === 'production') {
   // Reccommended for production database to use SSL
   options = {
@@ -12,6 +13,10 @@ if (NODE_ENV === 'production') {
         rejectUnauthorized: false,
       },
     },
+  };
+} else {
+  options = {
+    logging: false,
   };
 }
 
