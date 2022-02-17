@@ -1,7 +1,4 @@
 import supertest from 'supertest';
-// import bcrypt from 'bcrypt';
-// import { Static } from 'runtypes';
-// import { String as RtString } from 'runtypes';
 import app from '../../app';
 import User from './user.model';
 import { User as UserType, UserArray as UserArrayType } from './user.types';
@@ -48,29 +45,14 @@ describe('User API', () => {
       id: 4,
       name: 'Mocked User 4',
       username: 'mockuser4',
-      passwordHash: '$2b$10$PHEk/xaRipJTFbV76TW6X.RrZSc/xffBcuTfeKkPHNAgVeISBizsW',
+      passwordHash:
+        '$2b$10$PHEk/xaRipJTFbV76TW6X.RrZSc/xffBcuTfeKkPHNAgVeISBizsW',
       dateRegistered: new Date(Date.now()).toDateString(),
     });
-    (User.destroy as jest.Mock).mockImplementation(() => {
-      console.log('deleted a user');
-    });
+    (User.destroy as jest.Mock).mockImplementation(() => {});
   });
 
   describe('when retrieving users', () => {
-    beforeEach(() => {
-      // await User.sync({ force: true });
-      // await User.create({
-      //   username: 'user1',
-      //   name: 'User One',
-      //   passwordHash: RtString.check(await bcrypt.hash('password1', 10)),
-      // });
-      // await User.create({
-      //   username: 'user2',
-      //   name: 'User Two',
-      //   passwordHash: RtString.check(await bcrypt.hash('password2', 10)),
-      // });
-    });
-
     test('successfully retrieves all users', async () => {
       const response = await api.get('/api/users').expect(200);
       const users = UserArrayType.check(JSON.parse(response.text));
@@ -86,25 +68,6 @@ describe('User API', () => {
   });
 
   describe('when deleting users', () => {
-    beforeEach(async () => {
-      // await User.sync({ force: true });
-      // await User.create({
-      //   username: 'user1',
-      //   name: 'User One',
-      //   passwordHash: RtString.check(await bcrypt.hash('password1', 10)),
-      // });
-      // await User.create({
-      //   username: 'user2',
-      //   name: 'User Two',
-      //   passwordHash: RtString.check(await bcrypt.hash('password2', 10)),
-      // });
-      // await User.create({
-      //   username: 'user3',
-      //   name: 'User Three',
-      //   passwordHash: RtString.check(await bcrypt.hash('password3', 10)),
-      // });
-    });
-
     test('successfully deletes user', async () => {
       const response = await api.get('/api/users/').expect(200);
       const users = UserArrayType.check(JSON.parse(response.text));
@@ -127,10 +90,6 @@ describe('User API', () => {
   });
 
   describe('when creating users', () => {
-    beforeEach(async () => {
-      // await User.sync({ force: true });
-    });
-
     test('successfully creates user', async () => {
       const newUser = {
         name: 'Mock User 4',
@@ -138,10 +97,7 @@ describe('User API', () => {
         password: 'testpassword',
       };
 
-      const response = await api
-        .post('/api/users')
-        .send(newUser)
-        .expect(201);
+      const response = await api.post('/api/users').send(newUser).expect(201);
 
       const user = UserType.check(JSON.parse(response.text));
 
@@ -151,9 +107,5 @@ describe('User API', () => {
       expect(user.id).toBe(4);
       expect(user.passwordHash).toBeDefined();
     });
-  });
-
-  afterAll(async () => {
-    // await sequelize.close();
   });
 });
