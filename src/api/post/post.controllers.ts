@@ -107,10 +107,8 @@ const updatePostByIdController = async (req: Request, res: Response) => {
     const post = PostType.check(await Post.findByPk(id));
 
     if (token.id !== post.userId) {
-      res
-        .status(401)
-        .json({ error: 'not authorized to update this post' })
-        .end();
+      res.status(401).json({ error: 'not authorized to update this post' });
+      return;
     }
 
     const results = await Post.update(
@@ -123,14 +121,16 @@ const updatePostByIdController = async (req: Request, res: Response) => {
     if (RtValidationError.guard(error)) {
       if (error.code === 'CONTENT_INCORRECT' && error.details) {
         if ('decodedToken' in error.details) {
-          res.status(401).json({ error: 'invalid or missing token' }).end();
+          res.status(401).json({ error: 'invalid or missing token' });
+          return;
         }
 
-        res.status(400).json({ error: error.details }).end();
+        res.status(400).json({ error: error.details });
+        return;
       }
     }
 
-    res.status(400).json({ error: 'invalid request' }).end();
+    res.status(400).json({ error: 'invalid request' });
   }
 };
 
