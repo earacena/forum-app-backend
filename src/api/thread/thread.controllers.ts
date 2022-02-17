@@ -22,12 +22,16 @@ const getThreadsController = async (_req: Request, res: Response) => {
     if (RtValidationError.guard(error)) {
       if (error.code === 'CONTENT_INCORRECT' && error.details) {
         if ('decodedToken' in error.details) {
-          res.status(401).json({ error: 'invalid or missing token' }).end();
+          res.status(401).json({ error: 'invalid or missing token' });
+          return;
         }
 
-        res.status(400).json({ error: error.details }).end();
+        res.status(400).json({ error: error.details });
+        return;
       }
     }
+
+    res.status(400).json({ error: 'invalid request' });
   }
 };
 
@@ -41,24 +45,28 @@ const getThreadByIdController = async (req: Request, res: Response) => {
     if (RtValidationError.guard(error)) {
       if (error.code === 'CONTENT_INCORRECT' && error.details) {
         if ('decodedToken' in error.details) {
-          res.status(401).json({ error: 'invalid or missing token' }).end();
+          res.status(401).json({ error: 'invalid or missing token' });
+          return;
         }
 
-        res.status(400).json({ error: error.details }).end();
+        res.status(400).json({ error: error.details });
+        return;
       }
     }
+
+    res.status(400).json({ error: 'invalid request' });
   }
 };
 
 const createThreadController = async (req: Request, res: Response) => {
   try {
     const { title, decodedToken } = ThreadPostRequest.check(req.body);
-
     const token = decodedTokenType.check(decodedToken);
     const user = UserType.check(await User.findByPk(token.id));
 
     if (!user) {
       res.status(400).json({ error: 'user does not exist' });
+      return;
     }
 
     const newThread = await Thread.create({
@@ -72,12 +80,14 @@ const createThreadController = async (req: Request, res: Response) => {
     if (RtValidationError.guard(error)) {
       if (error.code === 'CONTENT_INCORRECT' && error.details) {
         if ('decodedToken' in error.details) {
-          res.status(401).json({ error: 'invalid or missing token' }).end();
+          res.status(401).json({ error: 'invalid or missing token' });
+          return;
         }
 
-        res.status(400).json({ error: error.details }).end();
+        res.status(400).json({ error: error.details });
       }
     }
+    res.status(400).json({ error: 'invalid request' });
   }
 };
 
@@ -89,13 +99,10 @@ const deleteThreadByIdController = async (req: Request, res: Response) => {
     const user = UserType.check(await User.findByPk(token.id));
     const thread = ThreadType.check(await Thread.findByPk(id));
 
-    // console.log(`token: ${token}, postId: ${id}, user: ${user}, post: ${post}`);
-
     if (user.id !== thread.userId) {
-      res
-        .status(401)
-        .json({ error: "cannot delete another user's thread" })
-        .end();
+      res.status(401).json({ error: "cannot delete another user's thread" });
+
+      return;
     }
 
     await Thread.destroy({
@@ -109,12 +116,16 @@ const deleteThreadByIdController = async (req: Request, res: Response) => {
     if (RtValidationError.guard(error)) {
       if (error.code === 'CONTENT_INCORRECT' && error.details) {
         if ('decodedToken' in error.details) {
-          res.status(401).json({ error: 'invalid or missing token' }).end();
+          res.status(401).json({ error: 'invalid or missing token' });
+          return;
         }
 
-        res.status(400).json({ error: error.details }).end();
+        res.status(400).json({ error: error.details });
+        return;
       }
     }
+
+    res.status(400).json({ error: 'invalid request' });
   }
 };
 
