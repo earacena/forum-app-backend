@@ -59,33 +59,15 @@ describe('Thread API', () => {
     (Thread.findByPk as jest.Mock).mockResolvedValue(mockedThreads[0]);
     (Thread.findAll as jest.Mock).mockResolvedValue(mockedThreads);
     (Thread.create as jest.Mock).mockResolvedValue({
-      id: 1,
+      id: 4,
       userId: 3,
       title: 'Mocked discussion topic #4',
       dateCreated: new Date(Date.now()).toDateString(),
     });
-    (Thread.destroy as jest.Mock).mockImplementation(() => {
-      console.log('deleted a thread');
-    });
+    (Thread.destroy as jest.Mock).mockImplementation(() => {});
   });
 
   describe('when retrieving threads', () => {
-    beforeEach(() => {
-      // await Thread.sync({ force: true });
-      // await Thread.create({
-      //   userId: 1,
-      //   title: 'Discussion topic #1',
-      // });
-      // await Thread.create({
-      //   userId: 2,
-      //   title: 'Discussion topic #2',
-      // });
-      // await Thread.create({
-      //   userId: 3,
-      //   title: 'Discussion topic #3',
-      // });
-    });
-
     test('successfully retrieves all threads', async () => {
       const response = await api.get('/api/threads').expect(200);
       const threads = ThreadArrayType.check(JSON.parse(response.text));
@@ -101,22 +83,6 @@ describe('Thread API', () => {
   });
 
   describe('when deleting threads', () => {
-    beforeEach(() => {
-      // await Thread.sync({ force: true });
-      // await Thread.create({
-      //   userId: 1,
-      //   title: 'Discussion topic #1',
-      // });
-      // await Thread.create({
-      //   userId: 2,
-      //   title: 'Discussion topic #2',
-      // });
-      // await Thread.create({
-      //   userId: 3,
-      //   title: 'Discussion topic #3',
-      // });
-    });
-
     test('successfully deletes thread', async () => {
       const response = await api.get('/api/threads/').expect(200);
       const threads = ThreadArrayType.check(JSON.parse(response.text));
@@ -149,10 +115,6 @@ describe('Thread API', () => {
   });
 
   describe('when creating threads', () => {
-    beforeEach(() => {
-      // await Thread.sync({ force: true });
-    });
-
     test('successfully creates thread', async () => {
       const newThread = {
         userId: 3,
@@ -170,9 +132,5 @@ describe('Thread API', () => {
       expect(thread.title).toBe('Mocked discussion topic #4');
       expect(thread.userId).toBe(3);
     });
-  });
-
-  afterAll(async () => {
-    // await sequelize.close();
   });
 });
