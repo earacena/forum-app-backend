@@ -14,10 +14,6 @@ if (NODE_ENV === 'production') {
       },
     },
   };
-} else {
-  options = {
-    logging: false,
-  };
 }
 
 export const sequelize = new Sequelize(DATABASE_URL, options);
@@ -30,3 +26,5 @@ export const connectToDatabase = async () => {
     console.log('Failed to connect to database');
   }
 };
+
+export default sequelize;
