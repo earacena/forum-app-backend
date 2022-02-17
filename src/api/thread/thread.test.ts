@@ -1,91 +1,130 @@
+import { NextFunction, Request, Response } from 'express';
 import supertest from 'supertest';
 import app from '../../app';
-import { sequelize } from '../../utils/db';
-import { TokenResponse } from '../login/login.types';
+import 'sequelize';
 import Thread from './thread.model';
+import User from '../user/user.model';
 import {
   Thread as ThreadType,
   ThreadArray as ThreadArrayType,
-  RtValidationError,
 } from './thread.types';
 
 const api = supertest(app.app);
 
+jest.mock('sequelize');
+jest.mock('../user/user.model');
+jest.mock('./thread.model');
+jest.mock(
+  '../../middleware/authenticate',
+  () => (req: Request, _res: Response, next: NextFunction) => {
+    req.body.decodedToken = {
+      id: 1,
+      username: 'mockuser1',
+    };
+
+    next();
+  },
+);
+
 describe('Thread API', () => {
+  const mockedThreads = [
+    {
+      id: 1,
+      userId: 1,
+      title: 'Mocked discussion topic #1',
+      dateCreated: new Date(Date.now()).toDateString(),
+    },
+    {
+      id: 2,
+      userId: 1,
+      title: 'Mocked discussion topic #2',
+      dateCreated: new Date(Date.now()).toDateString(),
+    },
+    {
+      id: 3,
+      userId: 2,
+      title: 'Mocked discussion topic #3',
+      dateCreated: new Date(Date.now()).toDateString(),
+    },
+  ];
+
+  beforeAll(() => {
+    (User.findByPk as jest.Mock).mockResolvedValue({
+      id: 1,
+      name: 'Mock User 1',
+      username: 'mockuser1',
+      passwordHash: 'password_hash',
+      dateRegistered: new Date(Date.now()).toDateString(),
+    });
+    (Thread.findByPk as jest.Mock).mockResolvedValue(mockedThreads[0]);
+    (Thread.findAll as jest.Mock).mockResolvedValue(mockedThreads);
+    (Thread.create as jest.Mock).mockResolvedValue({
+      id: 1,
+      userId: 3,
+      title: 'Mocked discussion topic #4',
+      dateCreated: new Date(Date.now()).toDateString(),
+    });
+    (Thread.destroy as jest.Mock).mockImplementation(() => {
+      console.log('deleted a thread');
+    });
+  });
+
   describe('when retrieving threads', () => {
-    beforeEach(async () => {
-      await Thread.sync({ force: true });
-      await Thread.create({
-        userId: 1,
-        title: 'Discussion topic #1',
-      });
-      await Thread.create({
-        userId: 2,
-        title: 'Discussion topic #2',
-      });
-      await Thread.create({
-        userId: 3,
-        title: 'Discussion topic #3',
-      });
+    beforeEach(() => {
+      // await Thread.sync({ force: true });
+      // await Thread.create({
+      //   userId: 1,
+      //   title: 'Discussion topic #1',
+      // });
+      // await Thread.create({
+      //   userId: 2,
+      //   title: 'Discussion topic #2',
+      // });
+      // await Thread.create({
+      //   userId: 3,
+      //   title: 'Discussion topic #3',
+      // });
     });
 
     test('successfully retrieves all threads', async () => {
-      try {
-        const response = await api.get('/api/threads').expect(200);
-        console.log(JSON.parse(response.text));
-        const threads = ThreadArrayType.check(JSON.parse(response.text));
-        expect(threads).toHaveLength(3);
-      } catch (error: unknown) {
-        if (RtValidationError.guard(error)) {
-          if (error.code === 'CONTENT_INCORRECT') {
-            console.error(error.details);
-          } else {
-            console.error(error.code);
-          }
-        }
-      }
+      const response = await api.get('/api/threads').expect(200);
+      const threads = ThreadArrayType.check(JSON.parse(response.text));
+      expect(threads).toHaveLength(3);
     });
 
     test('successfully a thread by id', async () => {
       const response = await api.get('/api/threads/1').expect(200);
       const thread = ThreadType.check(JSON.parse(response.text));
       expect(thread).toBeDefined();
-      expect(thread.title).toBe('Discussion topic #1');
+      expect(thread.title).toBe('Mocked discussion topic #1');
     });
   });
 
   describe('when deleting threads', () => {
-    beforeEach(async () => {
-      await Thread.sync({ force: true });
-      await Thread.create({
-        userId: 1,
-        title: 'Discussion topic #1',
-      });
-      await Thread.create({
-        userId: 2,
-        title: 'Discussion topic #2',
-      });
-      await Thread.create({
-        userId: 3,
-        title: 'Discussion topic #3',
-      });
+    beforeEach(() => {
+      // await Thread.sync({ force: true });
+      // await Thread.create({
+      //   userId: 1,
+      //   title: 'Discussion topic #1',
+      // });
+      // await Thread.create({
+      //   userId: 2,
+      //   title: 'Discussion topic #2',
+      // });
+      // await Thread.create({
+      //   userId: 3,
+      //   title: 'Discussion topic #3',
+      // });
     });
 
     test('successfully deletes thread', async () => {
-      let response = await api.get('/api/threads/').expect(200);
+      const response = await api.get('/api/threads/').expect(200);
       const threads = ThreadArrayType.check(JSON.parse(response.text));
       const thread = ThreadType.check(threads[0]);
 
-      response = await api
-        .post('/api/login')
-        .send({ username: 'testuser', password: 'testpassword' })
-        .expect(200);
-
-      const { token } = TokenResponse.check(JSON.parse(response.text));
-
       await api
         .delete(`/api/threads/${thread.id}`)
-        .set('Authorization', `bearer ${token}`)
+        .set('Authorization', 'bearer token')
         .expect(204);
     });
 
@@ -94,17 +133,14 @@ describe('Thread API', () => {
       let threads = ThreadArrayType.check(JSON.parse(response.text));
       const thread = ThreadType.check(threads[0]);
 
-      response = await api
-        .post('/api/login')
-        .send({ username: 'testuser', password: 'testpassword' })
-        .expect(200);
-
-      const { token } = TokenResponse.check(JSON.parse(response.text));
-
       await api
         .delete(`/api/threads/${thread.id}`)
-        .set('Authorization', `bearer ${token}`)
+        .set('Authorization', 'bearer token')
         .expect(204);
+
+      (Thread.findAll as jest.Mock).mockResolvedValueOnce(
+        mockedThreads.slice(1),
+      );
 
       response = await api.get('/api/threads').expect(200);
       threads = ThreadArrayType.check(JSON.parse(response.text));
@@ -113,37 +149,30 @@ describe('Thread API', () => {
   });
 
   describe('when creating threads', () => {
-    beforeEach(async () => {
-      await Thread.sync({ force: true });
+    beforeEach(() => {
+      // await Thread.sync({ force: true });
     });
 
     test('successfully creates thread', async () => {
       const newThread = {
-        userId: 1,
-        title: 'Interesting topic to discuss',
+        userId: 3,
+        title: 'Mocked discussion thread #4',
       };
 
-      let response = await api
-        .post('/api/login')
-        .send({ username: 'testuser', password: 'testpassword' })
-        .expect(200);
-
-      const { token } = TokenResponse.check(JSON.parse(response.text));
-
-      response = await api
+      const response = await api
         .post('/api/threads')
         .send(newThread)
-        .set('Authorization', `bearer ${token}`)
+        .set('Authorization', 'bearer token')
         .expect(201);
 
       const thread = ThreadType.check(JSON.parse(response.text));
       expect(thread).toBeDefined();
-      expect(thread.title).toBe('Interesting topic to discuss');
-      expect(thread.userId).toBe(1);
+      expect(thread.title).toBe('Mocked discussion topic #4');
+      expect(thread.userId).toBe(3);
     });
   });
 
   afterAll(async () => {
-    await sequelize.close();
+    // await sequelize.close();
   });
 });
