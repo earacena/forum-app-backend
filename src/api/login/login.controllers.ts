@@ -15,9 +15,10 @@ const loginController = async (req: Request, res: Response) => {
       await User.findOne({ where: { username: credentials.username } }),
     );
 
-    const isPasswordCorrect = user === null
-      ? false
-      : await bcrypt.compare(credentials.password, user.passwordHash);
+    const isPasswordCorrect = await bcrypt.compare(
+      credentials.password,
+      user.passwordHash,
+    );
 
     if (!isPasswordCorrect) {
       res.status(401).json({
@@ -45,15 +46,17 @@ const loginController = async (req: Request, res: Response) => {
     if (RtValidationError.guard(error)) {
       if (error.code === 'CONTENT_INCORRECT' && error.details) {
         if ('decodedToken' in error.details) {
-          res.status(401).json({ error: 'invalid or missing token' }).end();
+          res.status(401).json({ error: 'invalid or missing token' });
+          return;
         }
-
-        res.status(400).json({ error: error.details });
+        if ('user' in error.details) {
+          res.status(400).json({ error: 'user does not exist' });
+          return;
+        }
       }
-    } else {
-      // console.error(error);
-      res.status(401).json({ error: 'invalid credentials' });
     }
+
+    res.status(401).json({ error: 'invalid credentials' });
   }
 };
 
