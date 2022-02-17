@@ -28,15 +28,17 @@ const getPostByIdController = async (req: Request, res: Response) => {
   }
 };
 
-const deletePostByIdController = async (req: Request, res: Response, _next: NextFunction) => {
+const deletePostByIdController = async (
+  req: Request,
+  res: Response,
+  _next: NextFunction,
+) => {
   try {
     const { decodedToken } = PostDeleteRequest.check(req.body);
     const { id } = RequestIdParam.check({ id: req.params['id'] });
     const token = decodedTokenType.check(decodedToken);
     const user = UserType.check(await User.findByPk(token.id));
     const post = PostType.check(await Post.findByPk(id));
-
-    // console.log(`token: ${token}, postId: ${id}, user: ${user}, post: ${post}`);
 
     if (user.id !== post.userId) {
       res
@@ -50,6 +52,7 @@ const deletePostByIdController = async (req: Request, res: Response, _next: Next
         id,
       },
     });
+
     res.status(204).end();
   } catch (error: unknown) {
     // console.error(error);
@@ -62,6 +65,8 @@ const deletePostByIdController = async (req: Request, res: Response, _next: Next
         res.status(400).json({ error: error.details }).end();
       }
     }
+
+    res.status(400).json({ error: 'invalid request' }).end();
   }
 };
 
@@ -89,6 +94,8 @@ const createPostController = async (req: Request, res: Response) => {
         res.status(400).json({ error: error.details }).end();
       }
     }
+
+    res.status(400).json({ error: 'invalid request' }).end();
   }
 };
 
@@ -106,21 +113,13 @@ const updatePostByIdController = async (req: Request, res: Response) => {
         .end();
     }
 
-    await Post.update(
-      {
-        content,
-      },
-      {
-        where: {
-          id,
-        },
-      },
+    const results = await Post.update(
+      { content },
+      { where: { id }, returning: true },
     );
-
-    const updatedPost = await Post.findByPk(id);
+    const updatedPost = PostType.check(results[1][0]);
     res.status(200).json(updatedPost);
   } catch (error) {
-    // console.error(error);
     if (RtValidationError.guard(error)) {
       if (error.code === 'CONTENT_INCORRECT' && error.details) {
         if ('decodedToken' in error.details) {
@@ -130,6 +129,8 @@ const updatePostByIdController = async (req: Request, res: Response) => {
         res.status(400).json({ error: error.details }).end();
       }
     }
+
+    res.status(400).json({ error: 'invalid request' }).end();
   }
 };
 
