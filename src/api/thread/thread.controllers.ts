@@ -74,7 +74,7 @@ const createThreadController = async (req: Request, res: Response) => {
       title,
     });
 
-    res.status(201).json(newThread).end();
+    res.status(201).json(newThread);
   } catch (error) {
     // console.error(error);
     if (RtValidationError.guard(error)) {
