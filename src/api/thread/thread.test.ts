@@ -3,17 +3,20 @@ import supertest from 'supertest';
 import app from '../../app';
 import 'sequelize';
 import Thread from './thread.model';
+import Post from '../post/post.model';
 import User from '../user/user.model';
 import {
   Thread as ThreadType,
   ThreadArray as ThreadArrayType,
 } from './thread.types';
+import { PostArray as PostArrayType } from '../post/post.types';
 
 const api = supertest(app.app);
 
 jest.mock('sequelize');
 jest.mock('../user/user.model');
 jest.mock('./thread.model');
+jest.mock('../post/post.model');
 jest.mock(
   '../../middleware/authenticate',
   () => (req: Request, _res: Response, next: NextFunction) => {
@@ -74,11 +77,39 @@ describe('Thread API', () => {
       expect(threads).toHaveLength(3);
     });
 
-    test('successfully a thread by id', async () => {
+    test('successfully a retrieves thread by id', async () => {
       const response = await api.get('/api/threads/1').expect(200);
       const thread = ThreadType.check(JSON.parse(response.text));
       expect(thread).toBeDefined();
       expect(thread.title).toBe('Mocked discussion topic #1');
+    });
+
+    test('successfully get all posts with same thread id', async () => {
+      (Post.findAll as jest.Mock).mockResolvedValueOnce([
+        {
+          id: 1,
+          threadId: 1,
+          userId: 1,
+          content: 'This is what I wanted to discuss.',
+          datePosted: new Date(Date.now()).toDateString(),
+        },
+        {
+          id: 2,
+          threadId: 1,
+          userId: 2,
+          content: 'That is very interesting',
+          datePosted: new Date(Date.now()).toDateString(),
+        },
+      ]);
+
+      const response = await api.get('/api/threads/1/posts').expect(200);
+
+      const posts = PostArrayType.check(JSON.parse(response.text));
+      expect(posts).toBeDefined();
+      expect(posts.every((post) => post.threadId === 1)).toEqual(
+        true,
+      );
+      expect(posts).toBe(posts.sort((a, b) => a.id - b.id));
     });
   });
 
