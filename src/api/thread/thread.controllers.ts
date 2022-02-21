@@ -12,6 +12,8 @@ import {
 import { User as UserType } from '../user/user.types';
 import User from '../user/user.model';
 import Thread from './thread.model';
+import Post from '../post/post.model';
+import { PostArray } from '../post/post.types';
 
 const getThreadsController = async (_req: Request, res: Response) => {
   try {
@@ -44,17 +46,32 @@ const getThreadByIdController = async (req: Request, res: Response) => {
     // console.error(error);
     if (RtValidationError.guard(error)) {
       if (error.code === 'CONTENT_INCORRECT' && error.details) {
-        if ('decodedToken' in error.details) {
-          res.status(401).json({ error: 'invalid or missing token' });
-          return;
-        }
-
         res.status(400).json({ error: error.details });
-        return;
       }
+    } else {
+      res.status(500);
     }
+  }
+};
 
-    res.status(400).json({ error: 'invalid request' });
+const getPostsOfThreadController = async (req: Request, res: Response) => {
+  try {
+    const { id } = RequestIdParam.check({ id: req.params['id'] });
+    const posts = PostArray.check(
+      await Post.findAll({ raw: true, where: { threadId: id }, order: [['id', 'ASC']] }),
+    );
+    res.status(200).json(posts);
+  } catch (error) {
+    // console.error(error);
+    if (RtValidationError.guard(error)) {
+      if (error.code === 'CONTENT_INCORRECT' && error.details) {
+        res.status(400).json({ error: error.details });
+      } else {
+        res.status(500);
+      }
+    } else {
+      res.status(500);
+    }
   }
 };
 
@@ -134,4 +151,5 @@ export default {
   getThreadByIdController,
   createThreadController,
   deleteThreadByIdController,
+  getPostsOfThreadController,
 };
