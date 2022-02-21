@@ -14,8 +14,18 @@ import Post from './post.model';
 import User from '../user/user.model';
 
 const getPostsController = async (_req: Request, res: Response) => {
-  const posts = PostArrayType.check(await Post.findAll({ raw: true }));
-  res.status(200).json(posts);
+  try {
+    const posts = PostArrayType.check(await Post.findAll({ raw: true }));
+    res.status(200).json(posts);
+  } catch (error: unknown) {
+    if (RtValidationError.guard(error)) {
+      if (error.code === 'CONTENT_INCORRECT' && error.details) {
+        res.status(500);
+      }
+    } else {
+      res.status(404);
+    }
+  }
 };
 
 const getPostByIdController = async (req: Request, res: Response) => {
