@@ -18,6 +18,10 @@ Post.init(
       type: DataTypes.INTEGER,
       allowNull: false,
     },
+    authorName: {
+      type: DataTypes.TEXT,
+      allowNull: false,
+    },
     content: {
       type: DataTypes.TEXT,
       allowNull: false,

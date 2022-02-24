@@ -75,20 +75,24 @@ const deletePostByIdController = async (
         res.status(400).json({ error: error.details }).end();
       }
     }
-
     res.status(400).json({ error: 'invalid request' }).end();
   }
 };
 
 const createPostController = async (req: Request, res: Response) => {
   try {
-    const { threadId, content, decodedToken } = PostPostRequest.check(req.body);
+    const {
+      threadId,
+      content,
+      decodedToken,
+    } = PostPostRequest.check(req.body);
 
     const token = decodedTokenType.check(decodedToken);
     const user = UserType.check(await User.findByPk(token.id));
 
     const newPost = await Post.create({
       userId: user.id,
+      authorName: user.name ? user.name : user.username,
       threadId,
       content,
     });
