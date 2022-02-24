@@ -11,6 +11,7 @@ CREATE TABLE posts (
   id INTEGER PRIMARY KEY GENERATED ALWAYS AS IDENTITY,
   thread_id INTEGER NOT NULL,
   user_id INTEGER NOT NULL,
+  author_name TEXT NOT NULL,
   content TEXT NOT NULL,
   date_posted TIMESTAMPTZ DEFAULT CURRENT_TIMESTAMP
 );
@@ -37,8 +38,8 @@ FROM users
 WHERE username = 'testuser';
 
 -- Create test posts by user(s)
-INSERT INTO posts(thread_id, user_id, content)
-SELECT id, user_id, 'This is my first post in this thread'
+INSERT INTO posts(thread_id, user_id, content, author_name)
+SELECT id, user_id, 'This is my first post in this thread', 'Test User'
 FROM threads
 WHERE title = 'This is my first thread!';
 
