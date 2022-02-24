@@ -29,6 +29,7 @@ describe('Post API', () => {
       id: 1,
       threadId: 1,
       userId: 1,
+      authorName: 'mockuser1',
       content: 'This is what I wanted to discuss.',
       datePosted: new Date(Date.now()).toDateString(),
     },
@@ -36,6 +37,7 @@ describe('Post API', () => {
       id: 2,
       threadId: 1,
       userId: 2,
+      authorName: 'mockuser2',
       content: 'Very interesting discussion.',
       datePosted: new Date(Date.now()).toDateString(),
     },
@@ -43,6 +45,7 @@ describe('Post API', () => {
       id: 3,
       threadId: 2,
       userId: 2,
+      authorName: 'mockuser2',
       content: 'Following up on our previous discussion...',
       datePosted: new Date(Date.now()).toDateString(),
     },
@@ -62,6 +65,7 @@ describe('Post API', () => {
       id: 4,
       userId: 1,
       threadId: 1,
+      authorName: 'mockuser1',
       content: 'Interesting...',
       datePosted: new Date(Date.now()).toDateString(),
     });
@@ -72,6 +76,7 @@ describe('Post API', () => {
           id: 1,
           threadId: 1,
           userId: 1,
+          authorName: 'mockuser1',
           content: 'This is a very interesting discussion.',
           datePosted: new Date(Date.now()).toDateString(),
         },
@@ -133,6 +138,7 @@ describe('Post API', () => {
         id: 3,
         threadId: 2,
         userId: 2,
+        authorName: 'mockuser2',
         content: 'Following up on our previous discussion...',
         datePosted: 'Thu Feb 17 2022',
       });
@@ -172,6 +178,7 @@ describe('Post API', () => {
         id: 1,
         threadId: 1,
         userId: 1,
+        authorName: 'mockuser1',
         content: 'This is a very interesting discussion.',
         datePosted: new Date(Date.now()).toDateString(),
       });
@@ -189,6 +196,7 @@ describe('Post API', () => {
         id: 1,
         threadId: 1,
         userId: 1,
+        authorName: 'mockuser1',
         content: 'This is a very interesting discussion.',
         datePosted: new Date(Date.now()).toDateString(),
       });

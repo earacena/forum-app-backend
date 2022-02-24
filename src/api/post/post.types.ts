@@ -14,6 +14,7 @@ export const Post = RtRecord({
   id: RtNumber,
   threadId: RtNumber,
   userId: RtNumber,
+  authorName: RtString,
   content: RtString,
   datePosted: RtUnion(
     RtInstanceOf(Date),
