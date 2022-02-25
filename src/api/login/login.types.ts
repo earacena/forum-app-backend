@@ -17,6 +17,7 @@ export const decodedToken = RtRecord({
 export const PasswordHash = RtString;
 export const TokenResponse = RtRecord({
   token: RtString,
+  id: RtNumber,
   username: RtString,
   name: RtString,
 });

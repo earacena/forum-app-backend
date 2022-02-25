@@ -38,6 +38,7 @@ const loginController = async (req: Request, res: Response) => {
       .status(200)
       .send({
         token,
+        id: user.id,
         username: user.username,
         name: user.name,
       })
