@@ -1,8 +1,16 @@
 import supertest from 'supertest';
 import app from '../../app';
-import { Topic as TopicType, TopicArray as TopicArrayType } from './topic.types';
+import Topic from './topic.model';
+import 'sequelize';
+import {
+  Topic as TopicType,
+  TopicArray as TopicArrayType,
+} from './topic.types';
 
 const api = supertest(app.app);
+
+jest.mock('sequelize');
+jest.mock('./topic.model');
 
 describe('Topic API', () => {
   const mockedTopics = [
@@ -28,6 +36,11 @@ describe('Topic API', () => {
       dateCreated: new Date(Date.now()).toDateString(),
     },
   ];
+
+  beforeAll(() => {
+    (Topic.findAll as jest.Mock).mockResolvedValue(mockedTopics);
+    (Topic.findByPk as jest.Mock).mockResolvedValue(mockedTopics[1]);
+  });
 
   describe('when retrieving topics', () => {
     test('successfully retrieves all topics', async () => {

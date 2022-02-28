@@ -5,6 +5,7 @@ import {
   Union as RtUnion,
   InstanceOf as RtInstanceOf,
   Array as RtArray,
+  ValidationError,
 } from 'runtypes';
 
 export const Topic = RtRecord({
@@ -29,4 +30,9 @@ export const Topic = RtRecord({
   ),
 });
 
+export const RequestIdParam = RtRecord({
+  id: RtString,
+});
+
 export const TopicArray = RtArray(Topic);
+export const RtValidationError = RtInstanceOf(ValidationError);
