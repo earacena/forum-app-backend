@@ -3,8 +3,8 @@ CREATE TABLE users (
   id INTEGER PRIMARY KEY GENERATED ALWAYS AS IDENTITY,
   username TEXT,
   name TEXT,
-  date_registered TIMESTAMPTZ DEFAULT CURRENT_TIMESTAMP,
   password_hash TEXT
+  date_registered TIMESTAMPTZ DEFAULT CURRENT_TIMESTAMP,
 );
 
 CREATE TABLE posts (
@@ -19,8 +19,17 @@ CREATE TABLE posts (
 CREATE TABLE threads (
   id INTEGER PRIMARY KEY GENERATED ALWAYS AS IDENTITY,
   user_id INTEGER NOT NULL,
-  date_created TIMESTAMPTZ DEFAULT CURRENT_TIMESTAMP,
+  topic_id INTEGER NOT NULL,
   title TEXT NOT NULL
+  date_created TIMESTAMPTZ DEFAULT CURRENT_TIMESTAMP,
+);
+
+CREATE TABLE topics (
+  id INTEGER PRIMARY KEY GENERATED ALWAYS AS IDENTITY,
+  user_id INTEGER NOT NULL,
+  title TEXT NOT NULL
+  description TEXT NOT NULL,
+  date_created TIMESTAMPTZ DEFAULT CURRENT_TIMESTAMP,
 );
 
 -- -- Test data
@@ -31,9 +40,13 @@ CREATE TABLE threads (
 INSERT INTO users(username, name, password_hash)
 VALUES ('testuser', 'Test User', '$2b$10$PHEk/xaRipJTFbV76TW6X.RrZSc/xffBcuTfeKkPHNAgVeISBizsW');
 
+-- Create test topics
+INSERT INTO topics (user_id, title, description)
+values (1, 'Technology', 'Discussions about technology.');
+
 -- Create test threads by user(s)
-INSERT INTO threads(user_id, title)
-SELECT id, 'This is my first thread!'
+INSERT INTO threads(user_id, topic_id, title)
+SELECT id, 1, 'This is my first thread!'
 FROM users
 WHERE username = 'testuser';
 
@@ -47,3 +60,4 @@ WHERE title = 'This is my first thread!';
 select * from users;
 select * from posts;
 select * from threads;
+select * from topics;
