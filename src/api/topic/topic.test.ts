@@ -6,6 +6,8 @@ import {
   Topic as TopicType,
   TopicArray as TopicArrayType,
 } from './topic.types';
+import Thread from '../thread/thread.model';
+import { ThreadArray as ThreadArrayType } from '../thread/thread.types';
 
 const api = supertest(app.app);
 
@@ -53,6 +55,30 @@ describe('Topic API', () => {
       const response = await api.get('/api/topics/2').expect(200);
       const topic = TopicType.check(JSON.parse(response.text));
       expect(topic).toBeDefined();
+    });
+
+    test('successfully gets all threads with same topic id', async () => {
+      (Thread.findAll as jest.Mock).mockResolvedValueOnce([
+        {
+          id: 1,
+          userId: 1,
+          topicId: 1,
+          title: 'Mock thread # 1',
+          dateCreated: new Date(Date.now()).toDateString(),
+        },
+        {
+          id: 3,
+          userId: 4,
+          topicId: 1,
+          title: 'Mock thread # 2',
+          dateCreated: new Date(Date.now()).toDateString(),
+        },
+      ]);
+
+      const response = await api.get('/api/topics/1/threads').expect(200);
+      const threads = ThreadArrayType.check(JSON.parse(response.text));
+      expect(threads).toBeDefined();
+      expect(threads.every((thread) => thread.topicId === 1)).toEqual(true);
     });
   });
 });
