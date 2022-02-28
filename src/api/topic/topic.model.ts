@@ -30,7 +30,7 @@ Topic.init(
     sequelize,
     underscored: true,
     timestamps: false,
-    modelName: 'thread',
+    modelName: 'topic',
   },
 );
 
