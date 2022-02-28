@@ -13,6 +13,10 @@ Thread.init(
       type: DataTypes.INTEGER,
       allowNull: false,
     },
+    topicId: {
+      type: DataTypes.INTEGER,
+      allowNull: false,
+    },
     dateCreated: {
       type: DataTypes.DATE,
       defaultValue: Sequelize.literal('CURRENT_TIMESTAMP'),
