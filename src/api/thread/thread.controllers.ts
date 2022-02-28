@@ -23,17 +23,12 @@ const getThreadsController = async (_req: Request, res: Response) => {
     // console.error(error);
     if (RtValidationError.guard(error)) {
       if (error.code === 'CONTENT_INCORRECT' && error.details) {
-        if ('decodedToken' in error.details) {
-          res.status(401).json({ error: 'invalid or missing token' });
-          return;
-        }
-
         res.status(400).json({ error: error.details });
         return;
       }
     }
 
-    res.status(400).json({ error: 'invalid request' });
+    res.status(500);
   }
 };
 
@@ -77,7 +72,7 @@ const getPostsOfThreadController = async (req: Request, res: Response) => {
 
 const createThreadController = async (req: Request, res: Response) => {
   try {
-    const { title, decodedToken } = ThreadPostRequest.check(req.body);
+    const { topicId, title, decodedToken } = ThreadPostRequest.check(req.body);
     const token = decodedTokenType.check(decodedToken);
     const user = UserType.check(await User.findByPk(token.id));
 
@@ -89,6 +84,7 @@ const createThreadController = async (req: Request, res: Response) => {
     const newThread = await Thread.create({
       userId: user.id,
       title,
+      topicId,
     });
 
     res.status(201).json(newThread);
