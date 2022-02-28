@@ -13,6 +13,7 @@ import {
 export const Thread = RtRecord({
   id: RtNumber,
   userId: RtNumber,
+  topicId: RtNumber,
   title: RtString,
   dateCreated: RtUnion(
     RtInstanceOf(Date),
@@ -38,6 +39,7 @@ export const decodedToken = RtRecord({
 
 export const ThreadPostRequest = RtRecord({
   title: RtString,
+  topicId: RtNumber,
   decodedToken: RtOptional(
     RtRecord({
       id: RtNumber,

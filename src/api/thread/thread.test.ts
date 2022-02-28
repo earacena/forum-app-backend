@@ -34,18 +34,21 @@ describe('Thread API', () => {
     {
       id: 1,
       userId: 1,
+      topicId: 1,
       title: 'Mocked discussion topic #1',
       dateCreated: new Date(Date.now()).toDateString(),
     },
     {
       id: 2,
       userId: 1,
+      topicId: 1,
       title: 'Mocked discussion topic #2',
       dateCreated: new Date(Date.now()).toDateString(),
     },
     {
       id: 3,
       userId: 2,
+      topicId: 1,
       title: 'Mocked discussion topic #3',
       dateCreated: new Date(Date.now()).toDateString(),
     },
@@ -64,6 +67,7 @@ describe('Thread API', () => {
     (Thread.create as jest.Mock).mockResolvedValue({
       id: 4,
       userId: 3,
+      topicId: 1,
       title: 'Mocked discussion topic #4',
       dateCreated: new Date(Date.now()).toDateString(),
     });
@@ -150,6 +154,7 @@ describe('Thread API', () => {
   describe('when creating threads', () => {
     test('successfully creates thread', async () => {
       const newThread = {
+        topicId: 1,
         userId: 3,
         title: 'Mocked discussion thread #4',
       };
