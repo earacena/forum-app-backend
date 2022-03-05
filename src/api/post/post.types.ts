@@ -8,6 +8,7 @@ import {
   InstanceOf as RtInstanceOf,
   ValidationError,
   Union as RtUnion,
+  Boolean as RtBoolean,
 } from 'runtypes';
 
 export const Post = RtRecord({
@@ -16,6 +17,7 @@ export const Post = RtRecord({
   userId: RtNumber,
   authorName: RtString,
   content: RtString,
+  isOriginalPost: RtBoolean,
   datePosted: RtUnion(
     RtInstanceOf(Date),
     RtString.withConstraint((x: string) => {
@@ -35,6 +37,7 @@ export type Posts = RtStatic<typeof PostArray>;
 export const PostPostRequest = RtRecord({
   threadId: RtNumber,
   content: RtString,
+  isOriginalPost: RtBoolean,
   decodedToken: RtOptional(
     RtRecord({
       username: RtString,
