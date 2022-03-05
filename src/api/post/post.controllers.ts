@@ -93,6 +93,7 @@ const createPostController = async (req: Request, res: Response) => {
     const {
       threadId,
       content,
+      isOriginalPost,
       decodedToken,
     } = PostPostRequest.check(req.body);
 
@@ -103,6 +104,7 @@ const createPostController = async (req: Request, res: Response) => {
       userId: user.id,
       authorName: user.name ? user.name : user.username,
       threadId,
+      isOriginalPost,
       content,
     });
     res.status(201).json(newPost).end();
