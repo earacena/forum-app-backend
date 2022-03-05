@@ -18,6 +18,10 @@ Post.init(
       type: DataTypes.INTEGER,
       allowNull: false,
     },
+    isOriginalPost: {
+      type: DataTypes.BOOLEAN,
+      allowNull: false,
+    },
     authorName: {
       type: DataTypes.TEXT,
       allowNull: false,
