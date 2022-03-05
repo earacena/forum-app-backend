@@ -23,10 +23,10 @@ const getPostsController = async (_req: Request, res: Response) => {
         res.status(500);
       } else {
         res.status(500);
+        return;
       }
-    } else {
-      res.status(404);
     }
+    res.status(404);
   }
 };
 
@@ -39,10 +39,10 @@ const getPostByIdController = async (req: Request, res: Response) => {
     if (RtValidationError.guard(error)) {
       if (error.code === 'CONTENT_INCORRECT' && error.details) {
         res.status(400).json({ error: error.details });
+        return;
       }
-    } else {
-      res.status(400).json({ error: 'invalid request' });
     }
+    res.status(400).json({ error: 'invalid request' });
   }
 };
 
@@ -80,11 +80,12 @@ const deletePostByIdController = async (
           res.status(401).json({ error: 'invalid or missing token' });
         } else {
           res.status(400).json({ error: error.details });
+          return;
         }
       }
-    } else {
-      res.status(400).json({ error: 'invalid request' });
     }
+
+    res.status(400).json({ error: 'invalid request' });
   }
 };
 
@@ -113,14 +114,15 @@ const createPostController = async (req: Request, res: Response) => {
     if (RtValidationError.guard(error)) {
       if (error.code === 'CONTENT_INCORRECT' && error.details) {
         if ('decodedToken' in error.details) {
-          res.status(401).json({ error: 'invalid or missing token' }).end();
+          res.status(401).json({ error: 'invalid or missing token' });
+        } else {
+          res.status(400).json({ error: error.details });
+          return;
         }
-
-        res.status(400).json({ error: error.details }).end();
       }
     }
 
-    res.status(400).json({ error: 'invalid request' }).end();
+    res.status(400).json({ error: 'invalid request' });
   }
 };
 
@@ -147,11 +149,10 @@ const updatePostByIdController = async (req: Request, res: Response) => {
       if (error.code === 'CONTENT_INCORRECT' && error.details) {
         if ('decodedToken' in error.details) {
           res.status(401).json({ error: 'invalid or missing token' });
+        } else {
+          res.status(400).json({ error: error.details });
           return;
         }
-
-        res.status(400).json({ error: error.details });
-        return;
       }
     }
 
