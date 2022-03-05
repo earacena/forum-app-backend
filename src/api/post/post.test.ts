@@ -144,6 +144,7 @@ describe('Post API', () => {
         threadId: 2,
         userId: 2,
         authorName: 'mockuser2',
+        isOriginalPost: false,
         content: 'Following up on our previous discussion...',
         datePosted: 'Thu Feb 17 2022',
       });
@@ -160,6 +161,7 @@ describe('Post API', () => {
       const newPost = {
         threadId: 1,
         content: 'Interesting...',
+        isOriginalPost: false,
       };
 
       const response = await api
@@ -184,6 +186,7 @@ describe('Post API', () => {
         threadId: 1,
         userId: 1,
         authorName: 'mockuser1',
+        isOriginalPost: true,
         content: 'This is a very interesting discussion.',
         datePosted: new Date(Date.now()).toDateString(),
       });
@@ -202,6 +205,7 @@ describe('Post API', () => {
         threadId: 1,
         userId: 1,
         authorName: 'mockuser1',
+        isOriginalPost: true,
         content: 'This is a very interesting discussion.',
         datePosted: new Date(Date.now()).toDateString(),
       });
