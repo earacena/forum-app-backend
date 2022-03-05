@@ -21,6 +21,8 @@ const getPostsController = async (_req: Request, res: Response) => {
     if (RtValidationError.guard(error)) {
       if (error.code === 'CONTENT_INCORRECT' && error.details) {
         res.status(500);
+      } else {
+        res.status(500);
       }
     } else {
       res.status(404);
@@ -29,12 +31,18 @@ const getPostsController = async (_req: Request, res: Response) => {
 };
 
 const getPostByIdController = async (req: Request, res: Response) => {
-  const { id } = RequestIdParam.check({ id: req.params['id'] });
-  const post = await Post.findByPk(id);
-  if (post) {
+  try {
+    const { id } = RequestIdParam.check({ id: req.params['id'] });
+    const post = PostType.check(await Post.findByPk(id));
     res.status(200).json(post);
-  } else {
-    res.status(404).end();
+  } catch (error: unknown) {
+    if (RtValidationError.guard(error)) {
+      if (error.code === 'CONTENT_INCORRECT' && error.details) {
+        res.status(400).json({ error: error.details });
+      }
+    } else {
+      res.status(400).json({ error: 'invalid request' });
+    }
   }
 };
 
@@ -69,13 +77,14 @@ const deletePostByIdController = async (
     if (RtValidationError.guard(error)) {
       if (error.code === 'CONTENT_INCORRECT' && error.details) {
         if ('decodedToken' in error.details) {
-          res.status(401).json({ error: 'invalid or missing token' }).end();
+          res.status(401).json({ error: 'invalid or missing token' });
+        } else {
+          res.status(400).json({ error: error.details });
         }
-
-        res.status(400).json({ error: error.details }).end();
       }
+    } else {
+      res.status(400).json({ error: 'invalid request' });
     }
-    res.status(400).json({ error: 'invalid request' }).end();
   }
 };
 
