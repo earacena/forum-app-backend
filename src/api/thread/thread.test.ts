@@ -151,6 +151,56 @@ describe('Thread API', () => {
       threads = ThreadArrayType.check(JSON.parse(response.text));
       expect(JSON.parse(response.text)).toHaveLength(2);
     });
+
+    test('all associated posts are also deleted', async () => {
+      (Post.findAll as jest.Mock).mockResolvedValueOnce([
+        {
+          id: 1,
+          threadId: 1,
+          userId: 1,
+          isOriginalPost: true,
+          authorName: 'mockuser1',
+          content: 'This is what I wanted to discuss.',
+          datePosted: new Date(Date.now()).toDateString(),
+        },
+        {
+          id: 2,
+          threadId: 1,
+          userId: 2,
+          isOriginalPost: false,
+          authorName: 'mockuser2',
+          content: 'That is very interesting',
+          datePosted: new Date(Date.now()).toDateString(),
+        },
+        {
+          id: 3,
+          threadId: 1,
+          userId: 3,
+          isOriginalPost: false,
+          authorName: 'mockuser2',
+          content: 'That is super interesting',
+          datePosted: new Date(Date.now()).toDateString(),
+        },
+      ]);
+
+      let response = await api.get('/api/threads/').expect(200);
+      const threads = ThreadArrayType.check(JSON.parse(response.text));
+      const thread = ThreadType.check(threads[0]);
+
+      response = await api.get(`/api/threads/${thread.id}/posts`);
+      let posts = PostArrayType.check(JSON.parse(response.text));
+      expect(posts).toHaveLength(3);
+
+      await api
+        .delete(`/api/threads/${thread.id}`)
+        .set('Authorization', 'bearer token')
+        .expect(204);
+
+      (Post.findAll as jest.Mock).mockResolvedValueOnce([]);
+      response = await api.get(`/api/threads/${thread.id}/posts`).expect(200);
+      posts = PostArrayType.check(JSON.parse(response.text));
+      expect(posts).toHaveLength(0);
+    });
   });
 
   describe('when creating threads', () => {
