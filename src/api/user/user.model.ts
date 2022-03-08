@@ -11,9 +11,11 @@ User.init({
   username: {
     type: DataTypes.TEXT,
     allowNull: false,
+    unique: true,
   },
   name: {
     type: DataTypes.TEXT,
+    unique: true,
   },
   dateRegistered: {
     type: DataTypes.DATE,
