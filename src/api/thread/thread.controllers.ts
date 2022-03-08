@@ -119,11 +119,19 @@ const deleteThreadByIdController = async (req: Request, res: Response) => {
       return;
     }
 
+    // Delete associated posts that are inaccessible
+    await Post.destroy({
+      where: {
+        threadId: id,
+      },
+    });
+
     await Thread.destroy({
       where: {
         id,
       },
     });
+
     res.status(204).end();
   } catch (error: unknown) {
     // console.error(error);
