@@ -27,6 +27,7 @@ const loginController = async (req: Request, res: Response) => {
       return;
     }
 
+    // Group together data needed to identify user when decoding token
     const userDetails = {
       id: user.id,
       username: user.username,
