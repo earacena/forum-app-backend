@@ -1,7 +1,6 @@
-import { Request, Response } from 'express';
+import { NextFunction, Request, Response } from 'express';
 import {
   RequestIdParam,
-  RtValidationError,
   Thread as ThreadType,
   ThreadArray as ThreadArrayType,
   ThreadPostRequest,
@@ -15,41 +14,26 @@ import Thread from './thread.model';
 import Post from '../post/post.model';
 import { PostArray } from '../post/post.types';
 
-const getThreadsController = async (_req: Request, res: Response) => {
+const getThreadsController = async (_req: Request, res: Response, next: NextFunction) => {
   try {
     const threads = ThreadArrayType.check(await Thread.findAll());
     res.json(threads);
   } catch (error) {
-    // console.error(error);
-    if (RtValidationError.guard(error)) {
-      if (error.code === 'CONTENT_INCORRECT' && error.details) {
-        res.status(400).json({ error: error.details });
-        return;
-      }
-    }
-
-    res.status(500);
+    next(error);
   }
 };
 
-const getThreadByIdController = async (req: Request, res: Response) => {
+const getThreadByIdController = async (req: Request, res: Response, next: NextFunction) => {
   try {
     const { id } = RequestIdParam.check({ id: req.params['id'] });
     const thread = ThreadType.check(await Thread.findByPk(id));
     res.status(200).json(thread);
   } catch (error) {
-    // console.error(error);
-    if (RtValidationError.guard(error)) {
-      if (error.code === 'CONTENT_INCORRECT' && error.details) {
-        res.status(400).json({ error: error.details });
-      }
-    } else {
-      res.status(500);
-    }
+    next(error);
   }
 };
 
-const getPostsOfThreadController = async (req: Request, res: Response) => {
+const getPostsOfThreadController = async (req: Request, res: Response, next: NextFunction) => {
   try {
     const { id } = RequestIdParam.check({ id: req.params['id'] });
     const posts = PostArray.check(
@@ -57,20 +41,11 @@ const getPostsOfThreadController = async (req: Request, res: Response) => {
     );
     res.status(200).json(posts);
   } catch (error) {
-    // console.error(error);
-    if (RtValidationError.guard(error)) {
-      if (error.code === 'CONTENT_INCORRECT' && error.details) {
-        res.status(400).json({ error: error.details });
-      } else {
-        res.status(500);
-      }
-    } else {
-      res.status(500);
-    }
+    next(error);
   }
 };
 
-const createThreadController = async (req: Request, res: Response) => {
+const createThreadController = async (req: Request, res: Response, next: NextFunction) => {
   try {
     const { topicId, title, decodedToken } = ThreadPostRequest.check(req.body);
     const token = decodedTokenType.check(decodedToken);
@@ -89,23 +64,11 @@ const createThreadController = async (req: Request, res: Response) => {
 
     res.status(201).json(newThread);
   } catch (error) {
-    // console.error(error);
-    if (RtValidationError.guard(error)) {
-      if (error.code === 'CONTENT_INCORRECT' && error.details) {
-        if ('decodedToken' in error.details) {
-          res.status(401).json({ error: 'invalid or missing token' });
-          return;
-        }
-
-        res.status(400).json({ error: error.details });
-        return;
-      }
-    }
-    res.status(400).json({ error: 'invalid request' });
+    next(error);
   }
 };
 
-const deleteThreadByIdController = async (req: Request, res: Response) => {
+const deleteThreadByIdController = async (req: Request, res: Response, next: NextFunction) => {
   try {
     const { decodedToken } = ThreadDeleteRequest.check(req.body);
     const { id } = RequestIdParam.check({ id: req.params['id'] });
@@ -134,20 +97,7 @@ const deleteThreadByIdController = async (req: Request, res: Response) => {
 
     res.status(204).end();
   } catch (error: unknown) {
-    // console.error(error);
-    if (RtValidationError.guard(error)) {
-      if (error.code === 'CONTENT_INCORRECT' && error.details) {
-        if ('decodedToken' in error.details) {
-          res.status(401).json({ error: 'invalid or missing token' });
-          return;
-        }
-
-        res.status(400).json({ error: error.details });
-        return;
-      }
-    }
-
-    res.status(400).json({ error: 'invalid request' });
+    next(error);
   }
 };
 
