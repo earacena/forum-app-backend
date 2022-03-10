@@ -1,14 +1,13 @@
 import { sign as JwtSign } from 'jsonwebtoken';
 import bcrypt from 'bcrypt';
 import { String as RtString } from 'runtypes';
-import { Response, Request } from 'express';
+import { Response, Request, NextFunction } from 'express';
 import User from '../user/user.model';
 import { LoginRequest } from './login.types';
 import { User as UserType } from '../user/user.types';
 import { SECRET_JWT_KEY } from '../../config';
-import { RtValidationError } from '../post/post.types';
 
-const loginController = async (req: Request, res: Response) => {
+const loginController = async (req: Request, res: Response, next: NextFunction) => {
   try {
     const credentials = LoginRequest.check(req.body);
     const user = UserType.check(
@@ -45,20 +44,7 @@ const loginController = async (req: Request, res: Response) => {
       })
       .end();
   } catch (error: unknown) {
-    if (RtValidationError.guard(error)) {
-      if (error.code === 'CONTENT_INCORRECT' && error.details) {
-        if ('decodedToken' in error.details) {
-          res.status(401).json({ error: 'invalid or missing token' });
-          return;
-        }
-        if ('user' in error.details) {
-          res.status(400).json({ error: 'user does not exist' });
-          return;
-        }
-      }
-    }
-
-    res.status(401).json({ error: 'invalid credentials' });
+    next(error);
   }
 };
 
