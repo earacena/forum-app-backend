@@ -9,6 +9,7 @@ import { NODE_ENV, PORT } from './config';
 import { connectToDatabase } from './utils/db';
 import loginRouter from './api/login/login.routes';
 import topicsRouter from './api/topic/topic.routes';
+import errorHandler from './middleware/errorHandler';
 
 const app = express();
 
@@ -26,6 +27,9 @@ app.use('/api/posts', postsRouter);
 app.use('/api/threads', threadsRouter);
 app.use('/api/topics', topicsRouter);
 app.use('/api/login', loginRouter);
+
+// Post-route middleware
+app.use(errorHandler);
 
 const main = async () => {
   await connectToDatabase();
