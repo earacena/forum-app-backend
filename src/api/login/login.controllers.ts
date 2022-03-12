@@ -20,7 +20,7 @@ const loginController = async (req: Request, res: Response, next: NextFunction) 
     );
 
     if (!isPasswordCorrect) {
-      res.status(401).json({
+      res.status(400).json({
         error: 'invalid credentials',
       });
       return;
