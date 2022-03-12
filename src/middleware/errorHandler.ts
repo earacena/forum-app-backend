@@ -1,5 +1,8 @@
 import { ErrorRequestHandler } from 'express';
-import { InstanceOf as RtInstanceOf, ValidationError as RtValidationError } from 'runtypes';
+import {
+  InstanceOf as RtInstanceOf,
+  ValidationError as RtValidationError,
+} from 'runtypes';
 
 const errorHandler: ErrorRequestHandler = (err, _req, res, next) => {
   console.error(err);
@@ -9,6 +12,10 @@ const errorHandler: ErrorRequestHandler = (err, _req, res, next) => {
       res.status(401).json({ error: 'invalid or missing token' }).end();
     } else if (err.details && 'user' in err.details) {
       res.status(400).json({ error: 'user does not exist' }).end();
+    } else if (err.code === 'TYPE_INCORRECT' && err.message.includes('dateRegistered') && err.message.includes('was null')) {
+      res.status(400).json({ error: 'invalid credentials' }).end();
+    } else if (err.code === 'TYPE_INCORRECT' && err.message.includes('isOriginalPost') && err.message.includes('was null')) {
+      res.status(400).json({ error: 'post with that id not found' }).end();
     } else if (err.details && err.code === 'CONTENT_INCORRECT') {
       res.status(500).json({ error: err.details }).end();
     }
