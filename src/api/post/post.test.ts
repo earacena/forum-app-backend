@@ -103,6 +103,11 @@ describe('Post API', () => {
       expect(post).toBeDefined();
       expect(post.content).toBe('This is what I wanted to discuss.');
     });
+
+    test('returns error if given unallocated id', async () => {
+      (Post.findByPk as jest.Mock).mockResolvedValueOnce(null);
+      await api.get('/api/posts/20').expect(400);
+    });
   });
 
   describe('when deleting posts', () => {
@@ -110,6 +115,22 @@ describe('Post API', () => {
       const response = await api.get('/api/posts/').expect(200);
       const posts = PostArrayType.check(JSON.parse(response.text));
       const post = PostType.check(posts[0]);
+
+      await api
+        .delete(`/api/posts/${post.id}`)
+        .set('Authorization', 'bearer token')
+        .expect(204);
+    });
+
+    test('returns same response even if deleting same item twice', async () => {
+      const response = await api.get('/api/posts/').expect(200);
+      const posts = PostArrayType.check(JSON.parse(response.text));
+      const post = PostType.check(posts[0]);
+
+      await api
+        .delete(`/api/posts/${post.id}`)
+        .set('Authorization', 'bearer token')
+        .expect(204);
 
       await api
         .delete(`/api/posts/${post.id}`)
@@ -216,6 +237,40 @@ describe('Post API', () => {
       expect(JSON.parse(response.text).content).toBe(
         'This is a very interesting discussion.',
       );
+    });
+
+    test('returns error when trying to update other users post', async () => {
+      const postToUpdate = {
+        content: 'This is a very interesting discussion.',
+      };
+      (Post.findByPk as jest.Mock).mockResolvedValueOnce({
+        id: 1,
+        threadId: 1,
+        userId: 2,
+        authorName: 'mockuser1',
+        isOriginalPost: true,
+        content: 'This is a very interesting discussion.',
+        datePosted: new Date(Date.now()).toDateString(),
+      });
+
+      await api
+        .put('/api/posts/1')
+        .send(postToUpdate)
+        .set('Authorization', 'bearer token')
+        .expect(401);
+    });
+
+    test('returns error when trying to update non-existant post', async () => {
+      const postToUpdate = {
+        content: 'This is not an interesting discussion.',
+      };
+
+      (Post.findByPk as jest.Mock).mockResolvedValueOnce(null);
+      await api
+        .put('/api/posts/1')
+        .send(postToUpdate)
+        .set('Authorization', 'bearer token')
+        .expect(400);
     });
   });
 });
