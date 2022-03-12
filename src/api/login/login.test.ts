@@ -44,14 +44,14 @@ describe('Login API', () => {
       await api
         .post('/api/login')
         .send({ username: 'mockuser1', password: 'password2' })
-        .expect(401);
+        .expect(400);
 
       (User.findOne as jest.Mock).mockResolvedValueOnce(null);
 
       await api
         .post('/api/login')
         .send({ username: 'user2', password: 'password1' })
-        .expect(401);
+        .expect(400);
     });
   });
 });
