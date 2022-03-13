@@ -51,11 +51,6 @@ const createThreadController = async (req: Request, res: Response, next: NextFun
     const token = decodedTokenType.check(decodedToken);
     const user = UserType.check(await User.findByPk(token.id));
 
-    if (!user) {
-      res.status(400).json({ error: 'user does not exist' });
-      return;
-    }
-
     const newThread = await Thread.create({
       userId: user.id,
       title,
