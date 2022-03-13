@@ -13,9 +13,17 @@ const errorHandler: ErrorRequestHandler = (err, _req, res, next) => {
     } else if (err.details && 'user' in err.details) {
       res.status(400).json({ error: 'user does not exist' }).end();
     } else if (err.code === 'TYPE_INCORRECT' && err.message.includes('dateRegistered') && err.message.includes('was null')) {
+      // User was not found, User model is the only model with dateRegistered field
       res.status(400).json({ error: 'invalid credentials' }).end();
     } else if (err.code === 'TYPE_INCORRECT' && err.message.includes('isOriginalPost') && err.message.includes('was null')) {
+      // Post was not found, Post model is the only model with isOriginalPost field
       res.status(400).json({ error: 'post with that id not found' }).end();
+    } else if (err.code === 'TYPE_INCORRECT' && err.message.includes('topicId') && err.message.includes('was null')) {
+      // Thread was not found, Thread model is the only model with topicId field
+      res.status(400).json({ error: 'Thread with that id not found' }).end();
+    } else if (err.code === 'TYPE_INCORRECT' && err.message.includes('description') && err.message.includes('was null')) {
+      // Topics was not found, Topics model is the only model with description field
+      res.status(400).json({ error: 'Thread with that id not found' }).end();
     } else if (err.details && err.code === 'CONTENT_INCORRECT') {
       res.status(500).json({ error: err.details }).end();
     }
