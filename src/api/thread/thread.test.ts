@@ -88,6 +88,11 @@ describe('Thread API', () => {
       expect(thread.title).toBe('Mocked discussion topic #1');
     });
 
+    test('returns status 400 when retrieving thread with unallocated id', async () => {
+      (Thread.findByPk as jest.Mock).mockResolvedValueOnce(null);
+      await api.get('/api/threads/20').expect(400);
+    });
+
     test('successfully get all posts with same thread id', async () => {
       (Post.findAll as jest.Mock).mockResolvedValueOnce([
         {
@@ -127,6 +132,21 @@ describe('Thread API', () => {
       const threads = ThreadArrayType.check(JSON.parse(response.text));
       const thread = ThreadType.check(threads[0]);
 
+      await api
+        .delete(`/api/threads/${thread.id}`)
+        .set('Authorization', 'bearer token')
+        .expect(204);
+    });
+
+    test('returns same response even if deleting same thread twice', async () => {
+      const response = await api.get('/api/threads/').expect(200);
+      const threads = ThreadArrayType.check(JSON.parse(response.text));
+      const thread = ThreadType.check(threads[0]);
+
+      await api
+        .delete(`/api/threads/${thread.id}`)
+        .set('Authorization', 'bearer token')
+        .expect(204);
       await api
         .delete(`/api/threads/${thread.id}`)
         .set('Authorization', 'bearer token')
