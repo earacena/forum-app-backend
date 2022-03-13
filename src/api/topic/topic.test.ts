@@ -57,6 +57,11 @@ describe('Topic API', () => {
       expect(topic).toBeDefined();
     });
 
+    test('returns status 400 when retrieving topic with unallocated id', async () => {
+      (Topic.findByPk as jest.Mock).mockResolvedValueOnce(null);
+      await api.get('/api/topics/20').expect(400);
+    });
+
     test('successfully gets all threads with same topic id', async () => {
       (Thread.findAll as jest.Mock).mockResolvedValueOnce([
         {
