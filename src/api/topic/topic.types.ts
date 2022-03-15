@@ -5,6 +5,7 @@ import {
   Union as RtUnion,
   InstanceOf as RtInstanceOf,
   Array as RtArray,
+  Optional as RtOptional,
   ValidationError,
 } from 'runtypes';
 
@@ -32,6 +33,22 @@ export const Topic = RtRecord({
 
 export const RequestIdParam = RtRecord({
   id: RtString,
+});
+
+export const decodedToken = RtRecord({
+  id: RtNumber,
+  username: RtString,
+});
+
+export const TopicPostRequest = RtRecord({
+  title: RtString,
+  description: RtString,
+  decodedToken: RtOptional(
+    RtRecord({
+      id: RtNumber,
+      username: RtString,
+    }),
+  ),
 });
 
 export const TopicArray = RtArray(Topic);
