@@ -52,8 +52,8 @@ const createTopicController = async (req: Request, res: Response, next: NextFunc
     const user = UserType.check(await User.findByPk(token.id));
 
     // User must be admin to create topics
-    const userRole = RoleType.check(Role.findByPk(user.id));
-    if (!userRole || userRole.role !== 'admin') {
+    const userRole = RoleType.check(await Role.findByPk(user.id));
+    if (!userRole || userRole.userId !== user.id || userRole.role !== 'admin') {
       res.status(401).json({ error: 'not authorized to create topics' }).end();
       return;
     }
