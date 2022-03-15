@@ -1,3 +1,4 @@
+import { Request, Response, NextFunction } from 'express';
 import supertest from 'supertest';
 import app from '../../app';
 import Topic from './topic.model';
@@ -9,12 +10,26 @@ import {
 import Thread from '../thread/thread.model';
 import Role from '../role/role.model';
 import { ThreadArray as ThreadArrayType } from '../thread/thread.types';
+import User from '../user/user.model';
 
 const api = supertest(app.app);
 
 jest.mock('sequelize');
 jest.mock('./topic.model');
 jest.mock('../role/role.model');
+jest.mock('../user/user.model');
+jest.mock('../thread/thread.model');
+jest.mock(
+  '../../middleware/authenticate',
+  () => (req: Request, _res: Response, next: NextFunction) => {
+    req.body.decodedToken = {
+      id: 1,
+      username: 'mockuser1',
+    };
+
+    next();
+  },
+);
 
 describe('Topic API', () => {
   const mockedTopics = [
@@ -42,8 +57,22 @@ describe('Topic API', () => {
   ];
 
   beforeAll(() => {
+    (User.findByPk as jest.Mock).mockResolvedValue({
+      id: 1,
+      name: 'Mock User 1',
+      username: 'mockuser1',
+      passwordHash: 'password_hash',
+      dateRegistered: new Date(Date.now()).toDateString(),
+    });
     (Topic.findAll as jest.Mock).mockResolvedValue(mockedTopics);
     (Topic.findByPk as jest.Mock).mockResolvedValue(mockedTopics[1]);
+    (Topic.create as jest.Mock).mockResolvedValue({
+      id: 1,
+      userId: 1,
+      title: 'Cars',
+      description: 'Discussions about cars.',
+      dateCreated: new Date(Date.now()).toDateString(),
+    });
   });
 
   describe('when retrieving topics', () => {
@@ -91,7 +120,7 @@ describe('Topic API', () => {
 
   describe('when creating topics', () => {
     test('successfully creates new topic', async () => {
-      (Role.findByPk as jest.Mock).mockRejectedValueOnce({
+      (Role.findByPk as jest.Mock).mockResolvedValueOnce({
         userId: 1,
         role: 'admin',
       });
