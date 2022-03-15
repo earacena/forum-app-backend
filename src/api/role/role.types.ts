@@ -1,7 +1,7 @@
-import { Record as RtRecord, String as RtString } from 'runtypes';
+import { Record as RtRecord, Number as RtNumber, String as RtString } from 'runtypes';
 
 export const Role = RtRecord({
-  userId: RtString,
+  userId: RtNumber,
   role: RtString,
 });
 
