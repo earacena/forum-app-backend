@@ -12,6 +12,7 @@ export const LoginRequest = RtRecord({
 export const decodedToken = RtRecord({
   id: RtNumber,
   username: RtString,
+  role: RtString,
 });
 
 export const PasswordHash = RtString;
