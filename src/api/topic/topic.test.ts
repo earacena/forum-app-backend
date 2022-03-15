@@ -7,12 +7,14 @@ import {
   TopicArray as TopicArrayType,
 } from './topic.types';
 import Thread from '../thread/thread.model';
+import Role from '../role/role.model';
 import { ThreadArray as ThreadArrayType } from '../thread/thread.types';
 
 const api = supertest(app.app);
 
 jest.mock('sequelize');
 jest.mock('./topic.model');
+jest.mock('../role/role.model');
 
 describe('Topic API', () => {
   const mockedTopics = [
@@ -84,6 +86,30 @@ describe('Topic API', () => {
       const threads = ThreadArrayType.check(JSON.parse(response.text));
       expect(threads).toBeDefined();
       expect(threads.every((thread) => thread.topicId === 1)).toEqual(true);
+    });
+  });
+
+  describe('when creating topics', () => {
+    test('successfully creates new topic', async () => {
+      (Role.findByPk as jest.Mock).mockRejectedValueOnce({
+        userId: 1,
+        role: 'admin',
+      });
+      const newTopic = {
+        title: 'Cars',
+        description: 'Discussions about cars.',
+      };
+
+      const response = await api
+        .post('/api/topics')
+        .send(newTopic)
+        .set('Authorization', 'bearer token')
+        .expect(201);
+
+      const topic = TopicType.check(JSON.parse(response.text));
+      expect(topic).toBeDefined();
+      expect(topic.title).toBe('Cars');
+      expect(topic.description).toBe('Discussions about cars.');
     });
   });
 });
