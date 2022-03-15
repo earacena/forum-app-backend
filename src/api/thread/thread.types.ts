@@ -35,6 +35,7 @@ export type Threads = RtStatic<typeof ThreadArray>;
 export const decodedToken = RtRecord({
   username: RtString,
   id: RtNumber,
+  role: RtString,
 });
 
 export const ThreadPostRequest = RtRecord({
