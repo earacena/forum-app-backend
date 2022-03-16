@@ -38,6 +38,7 @@ export const RequestIdParam = RtRecord({
 export const decodedToken = RtRecord({
   id: RtNumber,
   username: RtString,
+  role: RtString,
 });
 
 export const TopicPostRequest = RtRecord({
