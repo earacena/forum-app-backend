@@ -3,6 +3,8 @@ import bcrypt from 'bcrypt';
 import jwt from 'jsonwebtoken';
 import app from '../../app';
 import User from '../user/user.model';
+import Role from '../role/role.model';
+
 import {
   TokenResponse as TokenResponseType,
 } from './login.types';
@@ -11,6 +13,7 @@ const api = supertest(app.app);
 jest.mock('jsonwebtoken');
 jest.mock('sequelize');
 jest.mock('../user/user.model');
+jest.mock('../role/role.model');
 jest.mock('bcrypt');
 
 describe('Login API', () => {
@@ -21,6 +24,10 @@ describe('Login API', () => {
       username: 'mockuser1',
       passwordHash: 'password_hash',
       dateRegistered: new Date(Date.now()).toDateString(),
+    });
+    (Role.findByPk as jest.Mock).mockResolvedValue({
+      userId: 1,
+      role: 'admin',
     });
     (bcrypt.compare as jest.Mock).mockResolvedValue(true);
     (jwt.sign as jest.Mock).mockReturnValue('mock token');
