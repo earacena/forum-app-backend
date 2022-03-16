@@ -1,5 +1,4 @@
 import { NextFunction, Request, Response } from 'express';
-import Role from '../role/role.model';
 import Thread from '../thread/thread.model';
 import { ThreadArray } from '../thread/thread.types';
 import Topic from './topic.model';
@@ -10,7 +9,6 @@ import {
   TopicPostRequest,
   decodedToken as decodedTokenType,
 } from './topic.types';
-import { Role as RoleType } from '../role/role.types';
 import { User as UserType } from '../user/user.types';
 import User from '../user/user.model';
 
@@ -52,8 +50,7 @@ const createTopicController = async (req: Request, res: Response, next: NextFunc
     const user = UserType.check(await User.findByPk(token.id));
 
     // User must be admin to create topics
-    const userRole = RoleType.check(await Role.findByPk(user.id));
-    if (!userRole || userRole.userId !== user.id || userRole.role !== 'admin') {
+    if (token.role !== 'admin') {
       res.status(401).json({ error: 'not authorized to create topics' }).end();
       return;
     }
