@@ -25,6 +25,7 @@ jest.mock(
     req.body.decodedToken = {
       id: 1,
       username: 'mockuser1',
+      role: 'admin',
     };
 
     next();
