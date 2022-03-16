@@ -1,9 +1,11 @@
 import supertest from 'supertest';
 import app from '../../app';
 import User from './user.model';
+import Role from '../role/role.model';
 import { User as UserType, UserArray as UserArrayType } from './user.types';
 
 jest.mock('./user.model');
+jest.mock('../role/role.model');
 
 const api = supertest(app.app);
 
@@ -50,6 +52,10 @@ describe('User API', () => {
       dateRegistered: new Date(Date.now()).toDateString(),
     });
     (User.destroy as jest.Mock).mockImplementation(() => {});
+    (Role.create as jest.Mock).mockResolvedValue({
+      userId: 1,
+      role: 'admin',
+    });
   });
 
   describe('when retrieving users', () => {
