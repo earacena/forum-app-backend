@@ -7,6 +7,7 @@ import {
 } from './user.types';
 import User from './user.model';
 import { RequestIdParam } from '../post/post.types';
+import Role from '../role/role.model';
 
 const getUsersController = async (_req: Request, res: Response, next: NextFunction) => {
   try {
@@ -28,6 +29,11 @@ const createUserController = async (req: Request, res: Response, next: NextFunct
         passwordHash,
       }),
     );
+
+    await Role.create({
+      userId: newUser.id,
+      role: 'user',
+    });
 
     res.status(201).json(newUser);
   } catch (error) {
