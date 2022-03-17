@@ -9,7 +9,11 @@ import { Role as RoleType } from '../role/role.types';
 import { User as UserType } from '../user/user.types';
 import { SECRET_JWT_KEY } from '../../config';
 
-const loginController = async (req: Request, res: Response, next: NextFunction) => {
+const loginController = async (
+  req: Request,
+  res: Response,
+  next: NextFunction,
+) => {
   try {
     const credentials = LoginRequest.check(req.body);
     const user = UserType.check(
@@ -45,6 +49,7 @@ const loginController = async (req: Request, res: Response, next: NextFunction) 
         id: user.id,
         username: user.username,
         name: user.name,
+        role: userRole.role,
       })
       .end();
   } catch (error: unknown) {
