@@ -1,13 +1,13 @@
 import { sign as JwtSign } from 'jsonwebtoken';
 import bcrypt from 'bcrypt';
-import { String as RtString } from 'runtypes';
 import { Response, Request, NextFunction } from 'express';
+import { String as RtString } from 'runtypes';
 import User from '../user/user.model';
+import Role from '../role/role.model';
 import { LoginRequest } from './login.types';
+import { Role as RoleType } from '../role/role.types';
 import { User as UserType } from '../user/user.types';
 import { SECRET_JWT_KEY } from '../../config';
-import Role from '../role/role.model';
-import { Role as RoleType } from '../role/role.types';
 
 const loginController = async (req: Request, res: Response, next: NextFunction) => {
   try {
