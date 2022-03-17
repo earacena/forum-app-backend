@@ -3,11 +3,10 @@ import {
   PostDeleteRequest,
   PostPostRequest,
   PostUpdateRequest,
-  RequestIdParam,
   Post as PostType,
   PostArray as PostArrayType,
 } from './post.types';
-import { decodedToken as decodedTokenType } from '../login/login.types';
+import { decodedToken as decodedTokenType, RequestIdParam } from '../../common.types';
 import { User as UserType } from '../user/user.types';
 import Post from './post.model';
 import User from '../user/user.model';
