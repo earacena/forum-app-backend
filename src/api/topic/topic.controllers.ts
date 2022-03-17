@@ -5,10 +5,9 @@ import Topic from './topic.model';
 import {
   Topic as TopicType,
   TopicArray as TopicArrayType,
-  RequestIdParam,
   TopicPostRequest,
-  decodedToken as decodedTokenType,
 } from './topic.types';
+import { decodedToken as decodedTokenType, RequestIdParam } from '../../common.types';
 import { User as UserType } from '../user/user.types';
 import User from '../user/user.model';
 
