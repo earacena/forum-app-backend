@@ -6,7 +6,7 @@ import {
   UserPostRequest,
 } from './user.types';
 import User from './user.model';
-import { RequestIdParam } from '../post/post.types';
+import { RequestIdParam } from '../../common.types';
 import Role from '../role/role.model';
 
 const getUsersController = async (_req: Request, res: Response, next: NextFunction) => {
