@@ -6,7 +6,6 @@ import {
   Array as RtArray,
   Optional as RtOptional,
   InstanceOf as RtInstanceOf,
-  ValidationError,
   Union as RtUnion,
   Boolean as RtBoolean,
 } from 'runtypes';
@@ -64,9 +63,3 @@ export const PostDeleteRequest = RtRecord({
     }),
   ),
 });
-
-export const RequestIdParam = RtRecord({
-  id: RtString,
-});
-
-export const RtValidationError = RtInstanceOf(ValidationError);
