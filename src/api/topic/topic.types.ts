@@ -6,7 +6,6 @@ import {
   InstanceOf as RtInstanceOf,
   Array as RtArray,
   Optional as RtOptional,
-  ValidationError,
 } from 'runtypes';
 
 export const Topic = RtRecord({
@@ -31,16 +30,6 @@ export const Topic = RtRecord({
   ),
 });
 
-export const RequestIdParam = RtRecord({
-  id: RtString,
-});
-
-export const decodedToken = RtRecord({
-  id: RtNumber,
-  username: RtString,
-  role: RtString,
-});
-
 export const TopicPostRequest = RtRecord({
   title: RtString,
   description: RtString,
@@ -53,4 +42,3 @@ export const TopicPostRequest = RtRecord({
 });
 
 export const TopicArray = RtArray(Topic);
-export const RtValidationError = RtInstanceOf(ValidationError);
