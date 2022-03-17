@@ -1,14 +1,12 @@
 import { NextFunction, Request, Response } from 'express';
 import {
-  RequestIdParam,
   Thread as ThreadType,
   ThreadArray as ThreadArrayType,
   ThreadPostRequest,
   ThreadDeleteRequest,
-  decodedToken as decodedTokenType,
 } from './thread.types';
-
 import { User as UserType } from '../user/user.types';
+import { decodedToken as decodedTokenType, RequestIdParam } from '../../common.types';
 import User from '../user/user.model';
 import Thread from './thread.model';
 import Post from '../post/post.model';
