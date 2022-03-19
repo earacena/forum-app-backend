@@ -10,7 +10,14 @@ This is backend of a forum web application.
   * Nodejs
 
 ## Usage
+### Download
+While in terminal with chosen directory, enter the command:
+```
+git clone https://github.com/earacena/forum-app-backend.git
+```
+
 ### Install
+While in the root project folder, enter the command:
 ```
 npm install
 ```
