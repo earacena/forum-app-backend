@@ -26,6 +26,7 @@ In order to run the backend, deploy locally, or run tests, a .env file with the 
 ```
 DEV_DATABASE_URL="postgres://pguser:pgpass@localhost:3003/pgdb"
 TEST_DATABASE_URL="postgres://pguser:pgpass@localhost:3003/test_pgdb"
+DATABASE_URL="postgres://..." # For live deployment, add connection URL for database 
 PORT=3001
 SECRET_JWT_KEY="abcd1234" # Generate your own key and paste here
 ```
