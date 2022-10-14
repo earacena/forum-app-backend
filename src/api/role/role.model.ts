@@ -7,6 +7,10 @@ Role.init({
     type: DataTypes.INTEGER,
     primaryKey: true,
   },
+  forumId: {
+    type: DataTypes.INTEGER,
+    allowNull: false,
+  },
   role: {
     type: DataTypes.TEXT,
     allowNull: false,
