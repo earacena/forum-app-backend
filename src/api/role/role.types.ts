@@ -2,6 +2,7 @@ import { Record as RtRecord, Number as RtNumber, String as RtString } from 'runt
 
 export const Role = RtRecord({
   userId: RtNumber,
+  forumId: RtNumber,
   role: RtString,
 });
 
