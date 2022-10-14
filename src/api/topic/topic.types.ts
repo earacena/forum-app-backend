@@ -11,6 +11,7 @@ import {
 export const Topic = RtRecord({
   id: RtNumber,
   userId: RtNumber,
+  forumId: RtNumber,
   title: RtString,
   description: RtString,
   dateCreated: RtUnion(
