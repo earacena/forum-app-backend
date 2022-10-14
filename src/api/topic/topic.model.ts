@@ -13,6 +13,10 @@ Topic.init(
       type: DataTypes.INTEGER,
       allowNull: false,
     },
+    forumId: {
+      type: DataTypes.INTEGER,
+      allowNull: false,
+    },
     dateCreated: {
       type: DataTypes.DATE,
       defaultValue: Sequelize.literal('CURRENT_TIMESTAMP'),
