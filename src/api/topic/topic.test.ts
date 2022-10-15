@@ -37,6 +37,7 @@ describe('Topic API', () => {
     {
       id: 1,
       userId: 1,
+      forumId: 1,
       title: 'Cars',
       description: 'Anything and everything about cars.',
       dateCreated: new Date(Date.now()).toDateString(),
@@ -44,6 +45,7 @@ describe('Topic API', () => {
     {
       id: 2,
       userId: 2,
+      forumId: 1,
       title: 'Food',
       description: 'Share your favorite food recipes.',
       dateCreated: new Date(Date.now()).toDateString(),
@@ -51,6 +53,7 @@ describe('Topic API', () => {
     {
       id: 3,
       userId: 3,
+      forumId: 1,
       title: 'Music',
       description: 'Discussions about music.',
       dateCreated: new Date(Date.now()).toDateString(),
@@ -70,6 +73,7 @@ describe('Topic API', () => {
     (Topic.create as jest.Mock).mockResolvedValue({
       id: 1,
       userId: 1,
+      forumId: 1,
       title: 'Cars',
       description: 'Discussions about cars.',
       dateCreated: new Date(Date.now()).toDateString(),
@@ -123,10 +127,12 @@ describe('Topic API', () => {
     test('successfully creates new topic', async () => {
       (Role.findByPk as jest.Mock).mockResolvedValueOnce({
         userId: 1,
+        forumId: 1,
         role: 'admin',
       });
       const newTopic = {
         title: 'Cars',
+        forumId: 1,
         description: 'Discussions about cars.',
       };
 
