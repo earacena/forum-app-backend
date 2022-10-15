@@ -28,6 +28,7 @@ export const Topic = RtRecord({
 });
 
 export const TopicPostRequest = RtRecord({
+  forumId: RtNumber,
   title: RtString,
   description: RtString,
   decodedToken: RtOptional(
