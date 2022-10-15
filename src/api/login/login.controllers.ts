@@ -5,7 +5,7 @@ import { String as RtString } from 'runtypes';
 import User from '../user/user.model';
 import Role from '../role/role.model';
 import { LoginRequest } from './login.types';
-import { Role as RoleType } from '../role/role.types';
+import { RoleArray } from '../role/role.types';
 import { User as UserType } from '../user/user.types';
 import { SECRET_JWT_KEY } from '../../config';
 
@@ -33,11 +33,11 @@ const loginController = async (
     }
 
     // Group together data needed to identify user when decoding token
-    const userRole = RoleType.check(await Role.findByPk(user.id));
+    const userRoles = RoleArray.check(await Role.findAll({ where: { userId: user.id } }));
     const userDetails = {
       id: user.id,
       username: user.username,
-      role: userRole.role,
+      roles: userRoles,
     };
 
     const token = RtString.check(JwtSign(userDetails, SECRET_JWT_KEY));
@@ -49,7 +49,7 @@ const loginController = async (
         id: user.id,
         username: user.username,
         name: user.name,
-        role: userRole.role,
+        roles: userRoles,
       })
       .end();
   } catch (error: unknown) {
