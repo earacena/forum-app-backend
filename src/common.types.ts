@@ -5,6 +5,7 @@ import {
   InstanceOf as RtInstanceOf,
   ValidationError,
 } from 'runtypes';
+import { RoleArray } from './api/role/role.types';
 
 export const RequestIdParam = RtRecord({
   id: RtString,
@@ -13,7 +14,7 @@ export const RequestIdParam = RtRecord({
 export const decodedToken = RtRecord({
   id: RtNumber,
   username: RtString,
-  role: RtString,
+  roles: RoleArray,
 });
 
 export const RtValidationError = RtInstanceOf(ValidationError);
