@@ -25,10 +25,18 @@ describe('Login API', () => {
       passwordHash: 'password_hash',
       dateRegistered: new Date(Date.now()).toDateString(),
     });
-    (Role.findByPk as jest.Mock).mockResolvedValue({
-      userId: 1,
-      role: 'admin',
-    });
+    (Role.findAll as jest.Mock).mockResolvedValue([
+      {
+        userId: 1,
+        forumId: 1,
+        role: 'admin',
+      },
+      {
+        userId: 1,
+        forumId: 2,
+        role: 'admin',
+      },
+    ]);
     (bcrypt.compare as jest.Mock).mockResolvedValue(true);
     (jwt.sign as jest.Mock).mockReturnValue('mock token');
   });
