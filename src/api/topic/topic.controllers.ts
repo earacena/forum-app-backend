@@ -44,12 +44,18 @@ const getThreadsOfTopicController = async (req: Request, res: Response, next: Ne
 
 const createTopicController = async (req: Request, res: Response, next: NextFunction) => {
   try {
-    const { title, description, decodedToken } = TopicPostRequest.check(req.body);
+    const {
+      forumId,
+      title,
+      description,
+      decodedToken,
+    } = TopicPostRequest.check(req.body);
     const token = decodedTokenType.check(decodedToken);
     const user = UserType.check(await User.findByPk(token.id));
 
-    // User must be admin to create topics
-    if (token.role !== 'admin') {
+    // Check decoded token for user roles, user must have an admin role
+    // for given forum to create topics
+    if (!token.roles.some((r) => ((r.forumId === forumId) && (r.role === 'admin')))) {
       res.status(401).json({ error: 'not authorized to create topics' }).end();
       return;
     }
