@@ -1,4 +1,10 @@
-import { Record as RtRecord, Number as RtNumber, String as RtString } from 'runtypes';
+import {
+  Record as RtRecord,
+  Number as RtNumber,
+  String as RtString,
+  Array as RtArray,
+  Static as RtStatic,
+} from 'runtypes';
 
 export const Role = RtRecord({
   userId: RtNumber,
@@ -6,6 +12,6 @@ export const Role = RtRecord({
   role: RtString,
 });
 
-export default {
-  Role,
-};
+export const RoleArray = RtArray(Role);
+
+export type Roles = RtStatic<typeof RoleArray>;
