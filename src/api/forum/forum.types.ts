@@ -7,6 +7,7 @@ import {
   InstanceOf as RtInstanceOf,
   Union as RtUnion,
 } from 'runtypes';
+import { decodedToken } from '../../common.types';
 
 export const Forum = RtRecord({
   id: RtNumber,
@@ -27,3 +28,13 @@ export const Forum = RtRecord({
 export const ForumArray = RtArray(Forum);
 
 export type Forums = RtStatic<typeof ForumArray>;
+
+export const ForumPostRequest = RtRecord({
+  forumTitle: RtString,
+  forumTopics: RtArray(RtRecord({
+    forumId: RtString,
+    title: RtString,
+    description: RtString,
+  })),
+  decodedToken,
+});
