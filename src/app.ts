@@ -10,6 +10,7 @@ import { connectToDatabase } from './utils/db';
 import loginRouter from './api/login/login.routes';
 import topicsRouter from './api/topic/topic.routes';
 import errorHandler from './middleware/errorHandler';
+import forumRouter from './api/forum/forum.routes';
 
 const app = express();
 
@@ -27,6 +28,7 @@ app.use('/api/posts', postsRouter);
 app.use('/api/threads', threadsRouter);
 app.use('/api/topics', topicsRouter);
 app.use('/api/login', loginRouter);
+app.use('/api/forum', forumRouter);
 
 // Post-route middleware
 app.use(errorHandler);
