@@ -28,7 +28,7 @@ app.use('/api/posts', postsRouter);
 app.use('/api/threads', threadsRouter);
 app.use('/api/topics', topicsRouter);
 app.use('/api/login', loginRouter);
-app.use('/api/forum', forumRouter);
+app.use('/api/forums', forumRouter);
 
 // Post-route middleware
 app.use(errorHandler);
