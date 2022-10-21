@@ -4,9 +4,18 @@ import User from '../user/user.model';
 import Role from '../role/role.model';
 import { User as UserType } from '../user/user.types';
 import Forum from './forum.model';
-import { Forum as ForumType, ForumPostRequest } from './forum.types';
+import { Forum as ForumType, ForumArray, ForumPostRequest } from './forum.types';
 import Topic from '../topic/topic.model';
 import { TopicArray } from '../topic/topic.types';
+
+const getAllForumsController = async (_req: Request, res: Response, next: NextFunction) => {
+  try {
+    const forums = ForumArray.check(await Forum.findAll());
+    res.status(200).json(forums);
+  } catch (error: unknown) {
+    next(error);
+  }
+};
 
 const createForumController = async (req: Request, res: Response, next: NextFunction) => {
   try {
@@ -58,6 +67,7 @@ const getTopicsOfForumController = async (req: Request, res: Response, next: Nex
 };
 
 export default {
+  getAllForumsController,
   createForumController,
   getTopicsOfForumController,
 };
