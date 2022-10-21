@@ -3,12 +3,14 @@ import forumControllers from './forum.controllers';
 import auth from '../../middleware/authenticate';
 
 const {
-  createForumController,
+  getAllForumsController,
   getTopicsOfForumController,
+  createForumController,
 } = forumControllers;
 
 const forumRouter = express.Router();
 
+forumRouter.get('/', getAllForumsController);
 forumRouter.get('/:id/topics', getTopicsOfForumController);
 forumRouter.post('/', auth, createForumController);
 
