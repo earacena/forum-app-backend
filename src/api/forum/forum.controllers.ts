@@ -42,8 +42,8 @@ const createForumController = async (req: Request, res: Response, next: NextFunc
     const topicPromises = forumTopics.map(async (t) => (
       Topic.create({
         userId: user.id,
-        title: t.title,
-        description: t.description,
+        title: t.topicTitle,
+        description: t.topicDescription,
       })
     ));
     await Promise.all(topicPromises);
