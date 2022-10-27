@@ -32,9 +32,9 @@ export type Forums = RtStatic<typeof ForumArray>;
 export const ForumPostRequest = RtRecord({
   forumTitle: RtString,
   forumTopics: RtArray(RtRecord({
-    forumId: RtString,
-    title: RtString,
-    description: RtString,
+    topicId: RtNumber,
+    topicTitle: RtString,
+    topicDescription: RtString,
   })),
   decodedToken,
 });
