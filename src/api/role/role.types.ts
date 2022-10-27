@@ -7,6 +7,7 @@ import {
 } from 'runtypes';
 
 export const Role = RtRecord({
+  id: RtNumber,
   userId: RtNumber,
   forumId: RtNumber,
   role: RtString,

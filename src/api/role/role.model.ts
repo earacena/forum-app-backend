@@ -3,9 +3,14 @@ import { sequelize } from '../../utils/db';
 
 class Role extends Model {}
 Role.init({
-  userId: {
+  id: {
     type: DataTypes.INTEGER,
     primaryKey: true,
+    autoIncrement: true,
+  },
+  userId: {
+    type: DataTypes.INTEGER,
+    allowNull: false,
   },
   forumId: {
     type: DataTypes.INTEGER,
