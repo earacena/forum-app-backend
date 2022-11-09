@@ -1,7 +1,16 @@
 # forum-app-backend
 
 ## Description
-This is backend of a forum web application.
+This is the backend of a forum web application.
+
+### Routes
+  * /api/login
+  * /api/forums
+  * /api/topics
+  * /api/threads
+  * /api/posts
+  * /api/users
+  * /api/role
 
 ### Technologies
   * Typescript
