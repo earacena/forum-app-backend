@@ -1,11 +1,9 @@
 # Forum Web Application Backend
 
 ## Description
-This is the backend of a forum web application.
+This is the backend of a forum web application. Deployed live [here]().
 
 The frontend repository can be accessed [here](https://github.com/earacena/forum-app-frontend).
-
-The live deployment of the forum app can be accessed [here]()
 
 ### Routes
   * /api/login
