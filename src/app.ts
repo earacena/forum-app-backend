@@ -5,7 +5,7 @@ import morgan = require('morgan');
 import usersRouter from './api/user/user.routes';
 import postsRouter from './api/post/post.routes';
 import threadsRouter from './api/thread/thread.routes';
-import { NODE_ENV, PORT } from './config';
+import { NODE_ENV, PORT, CORS_ORIGIN } from './config';
 import { connectToDatabase } from './utils/db';
 import loginRouter from './api/login/login.routes';
 import topicsRouter from './api/topic/topic.routes';
@@ -15,7 +15,10 @@ import forumRouter from './api/forum/forum.routes';
 const app = express();
 
 // Pre-route middleware
-app.use(cors());
+app.use(cors({
+  origin: `${CORS_ORIGIN}`,
+}));
+
 app.use(express.json());
 app.use(helmet());
 if (NODE_ENV === 'development') {
